@@ -1,0 +1,180 @@
+# Task ID: 19
+# Title: Develop Work Page with Nested Navigation
+# Status: pending
+# Dependencies: 16, 17
+# Priority: medium
+# Description: Create the Work page with nested navigation for categories and implement the slide sequence functionality (image, text, images).
+# Details:
+1. Create `src/pages/WorkPage.jsx` component
+2. Implement state for categories and selected work:
+```jsx
+const [categories, setCategories] = useState([]);
+const [selectedCategory, setSelectedCategory] = useState(null);
+const [selectedWork, setSelectedWork] = useState(null);
+const [slideIndex, setSlideIndex] = useState(0);
+
+useEffect(() => {
+  // Fetch categories and works from CMS
+  const fetchWorks = async () => {
+    try {
+      // This will be replaced with actual CMS data fetching
+      const response = await fetch('/api/works');
+      const data = await response.json();
+      
+      // Extract unique categories
+      const uniqueCategories = [...new Set(data.map(work => work.category))];
+      setCategories(uniqueCategories);
+      
+      if (uniqueCategories.length > 0) {
+        setSelectedCategory(uniqueCategories[0]);
+      }
+    } catch (error) {
+      console.error('Error fetching works:', error);
+    }
+  };
+  
+  fetchWorks();
+}, []);
+```
+3. Create nested navigation component:
+```jsx
+const Navigation = () => (
+  <div className="work-navigation">
+    <ul className="categories">
+      {categories.map(category => (
+        <li 
+          key={category}
+          className={selectedCategory === category ? 'active' : ''}
+          onClick={() => setSelectedCategory(category)}
+        >
+          {category}
+        </li>
+      ))}
+    </ul>
+    
+    {selectedCategory && (
+      <ul className="works">
+        {works
+          .filter(work => work.category === selectedCategory)
+          .map(work => (
+            <li 
+              key={work.id}
+              className={selectedWork?.id === work.id ? 'active' : ''}
+              onClick={() => {
+                setSelectedWork(work);
+                setSlideIndex(0);
+              }}
+            >
+              {work.title}
+            </li>
+          ))
+        }
+      </ul>
+    )}
+  </div>
+);
+```
+4. Implement slide sequence component:
+```jsx
+const SlideSequence = () => {
+  if (!selectedWork) return null;
+  
+  // Prepare slides: featured image, description, gallery images
+  const slides = [
+    { type: 'image', content: selectedWork.featuredImage },
+    { type: 'text', content: selectedWork.description },
+    ...selectedWork.gallery.map(item => ({ 
+      type: 'image', 
+      content: item.image,
+      caption: item.caption
+    }))
+  ];
+  
+  const currentSlide = slides[slideIndex];
+  
+  return (
+    <div className="slide-sequence">
+      <div className="slide-content">
+        {currentSlide.type === 'image' ? (
+          <div className="slide-image">
+            <img src={currentSlide.content} alt={currentSlide.caption || ''} />
+            {currentSlide.caption && <p className="caption">{currentSlide.caption}</p>}
+          </div>
+        ) : (
+          <div className="slide-text">
+            <div dangerouslySetInnerHTML={{ __html: currentSlide.content }} />
+          </div>
+        )}
+      </div>
+      
+      <div className="slide-controls">
+        <button 
+          onClick={() => setSlideIndex(prev => Math.max(0, prev - 1))}
+          disabled={slideIndex === 0}
+        >
+          Previous
+        </button>
+        <span>{slideIndex + 1} / {slides.length}</span>
+        <button 
+          onClick={() => setSlideIndex(prev => Math.min(slides.length - 1, prev + 1))}
+          disabled={slideIndex === slides.length - 1}
+        >
+          Next
+        </button>
+      </div>
+    </div>
+  );
+};
+```
+5. Combine components in the main WorkPage component:
+```jsx
+return (
+  <div className="work-page">
+    <Navigation />
+    <SlideSequence />
+  </div>
+);
+```
+6. Add CSS for layout and transitions
+7. For development, create a mock data file with sample works until CMS integration is complete
+
+# Test Strategy:
+1. Verify that categories load correctly and can be selected
+2. Test that works within a category display properly
+3. Confirm that selecting a work displays the correct slide sequence
+4. Test navigation between slides (previous/next buttons)
+5. Verify that images, text, and captions display correctly
+6. Check responsive behavior on different screen sizes
+7. Test keyboard navigation (arrow keys) for accessibility
+
+# Subtasks:
+## 1. Set Up WorkPage Component and State Management [pending]
+### Dependencies: None
+### Description: Create the WorkPage component file and initialize state for categories, selected category, selected work, and slide index. Implement logic to fetch works data and extract unique categories.
+### Details:
+Create src/pages/WorkPage.jsx. Use useState and useEffect to manage and fetch categories and works. Ensure initial state is set and categories are derived from fetched data.
+
+## 2. Implement Nested Navigation for Categories and Works [pending]
+### Dependencies: 19.1
+### Description: Develop a navigation component that displays categories and, upon selection, lists works within the selected category. Enable selection of a work to update the selectedWork and reset the slide index.
+### Details:
+Create a Navigation component with nested lists: categories at the top level, works as a nested list under the selected category. Handle click events to update selectedCategory and selectedWork.
+
+## 3. Build Slide Sequence Functionality [pending]
+### Dependencies: 19.2
+### Description: Create a SlideSequence component that displays a sequence of slides (featured image, description, gallery images) for the selected work, with controls to navigate between slides.
+### Details:
+Prepare slides array based on selectedWork. Render current slide based on slideIndex. Implement Previous/Next controls with appropriate disabling at boundaries.
+
+## 4. Integrate Components and Layout [pending]
+### Dependencies: 19.3
+### Description: Combine the Navigation and SlideSequence components within the WorkPage layout. Ensure state and props are correctly passed and the UI is cohesive.
+### Details:
+Render Navigation and SlideSequence side by side or in the desired layout within WorkPage. Confirm that interactions in navigation update the slide sequence as expected.
+
+## 5. Add Styling and Mock Data for Development [pending]
+### Dependencies: 19.4
+### Description: Apply CSS for layout, transitions, and visual polish. Create a mock data file with sample works to use until CMS integration is ready.
+### Details:
+Write CSS for navigation, slide transitions, and responsive design. Develop a mock data module and update data fetching logic to use it during development.
+

@@ -1,0 +1,32 @@
+[
+  {
+    "id": "body-1",
+    "title": "First Body of Work",
+    "description": "This is a description for the first collection of images.",
+    "images": [
+      "/images/work/body1/imageA.jpg",
+      "/images/work/body1/imageB.jpg",
+      "/images/work/body1/imageC.jpg"
+    ]
+  },
+  {
+    "id": "another-collection",
+    "title": "Another Collection",
+    "description": "Exploring different themes in this second set.",
+    "images": [
+      "/images/work/body2/photoX.jpg",
+      "/images/work/body2/photoY.jpg"
+    ]
+  },
+  {
+    "id": "project-alpha",
+    "title": "Project Alpha",
+    "description": "Early work from Project Alpha.",
+    "images": [
+      "/images/work/body3/img_001.jpg",
+      "/images/work/body3/img_002.png",
+      "/images/work/body3/img_003.jpg",
+      "/images/work/body3/img_004.webp"
+    ]
+  }
+] 

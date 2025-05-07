@@ -1,0 +1,205 @@
+# Task ID: 4
+# Title: Work Page Structure and Navigation
+# Status: done
+# Dependencies: 1, 2
+# Priority: high
+# Description: Implement the Work page structure with navigation between bodies of work and the sequence display (first image, description, additional images).
+# Details:
+1. Create a `WorkPage.jsx` component in the pages folder
+2. Set up data structure for bodies of work in `/src/data/workBodies.json`
+3. Implement a context provider (`WorkContext`) to share work data across components
+4. Create a component to display a single body of work with the required sequence
+5. Implement navigation between images using clicks and arrow keys
+6. Add custom cursor on hover for clickable images
+7. Create state to track the current image index within a body of work
+8. Example implementation:
+```jsx
+const WorkPage = () => {
+  const { bodyId } = useParams(); // From React Router
+  const workBodies = useContext(WorkContext);
+  const [currentBody, setCurrentBody] = useState(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  
+  useEffect(() => {
+    if (bodyId && workBodies) {
+      const body = workBodies.find(b => b.title.toLowerCase().replace(/ /g, '-') === bodyId);
+      setCurrentBody(body || workBodies[0]);
+      setCurrentIndex(0); // Reset to first image when changing bodies
+    } else if (workBodies && workBodies.length > 0) {
+      setCurrentBody(workBodies[0]);
+    }
+  }, [bodyId, workBodies]);
+  
+  const handleNext = () => {
+    if (currentBody && currentIndex < currentBody.images.length - 1) {
+      setCurrentIndex(currentIndex + 1);
+    }
+  };
+  
+  const handlePrevious = () => {
+    if (currentBody && currentIndex > 0) {
+      setCurrentIndex(currentIndex - 1);
+    }
+  };
+  
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'ArrowRight') handleNext();
+      if (e.key === 'ArrowLeft') handlePrevious();
+    };
+    
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [currentIndex, currentBody]);
+  
+  if (!currentBody) return <div>Loading...</div>;
+  
+  return (
+    <div className="work-page">
+      <div className="work-content" onClick={handleNext}>
+        {currentIndex === 0 ? (
+          // First image
+          <img 
+            src={currentBody.images[0]} 
+            alt={currentBody.title} 
+            className="work-image cursor-next"
+          />
+        ) : currentIndex === 1 ? (
+          // Description after first image
+          <div className="work-description">
+            <h2>{currentBody.title}</h2>
+            <p>{currentBody.description}</p>
+          </div>
+        ) : (
+          // Additional images
+          <img 
+            src={currentBody.images[currentIndex - 1]} 
+            alt={`${currentBody.title} ${currentIndex}`} 
+            className="work-image cursor-next"
+          />
+        )}
+      </div>
+    </div>
+  );
+};
+```
+
+# Test Strategy:
+1. Test navigation between bodies of work
+2. Verify the correct sequence (first image, description, additional images)
+3. Test navigation via clicks and arrow keys
+4. Confirm custom cursor appears on hover
+5. Test that the correct content is displayed for each body of work
+6. Verify responsive behavior on different screen sizes
+
+# Subtasks:
+## 1. Set Up Work Page Component and Folder Structure [done]
+### Dependencies: None
+### Description: Create the WorkPage.jsx component in the appropriate pages folder and ensure the project folder structure supports modularity and scalability.
+### Details:
+Follow best practices for React folder organization, placing page-level components in the pages directory and ensuring supporting components, context, and data are in their respective folders.
+<info added on 2025-05-03T23:12:22.913Z>
+Follow best practices for React folder organization, placing page-level components in the pages directory and ensuring supporting components, context, and data are in their respective folders.
+
+Implementation steps:
+1. Create `src/pages/WorkPage.jsx` file to serve as the main work portfolio page
+2. Import necessary React hooks: `React`, `useState`, `useEffect`, `useParams`, and `useContext` for state management and routing
+3. Define the `WorkPage` functional component with basic structure
+4. Initially implement a simple placeholder div to verify routing works correctly
+5. Export the component as default
+6. Update the application routing in `App.jsx` to handle both the main work page route (`/work`) and individual work item routes (`/work/:workId`)
+7. Replace any existing placeholder routes with the new WorkPage component
+
+This component will serve as the foundation for displaying work portfolio items, which will be populated from the data structure created in the next subtask (4.2).
+</info added on 2025-05-03T23:12:22.913Z>
+
+## 2. Design and Populate Work Bodies Data Structure [done]
+### Dependencies: 4.1
+### Description: Create and populate a JSON file (workBodies.json) in the data directory to store information about each body of work, including images and descriptions.
+### Details:
+Define a clear schema for each work body, including fields for title, description, and an array of image URLs.
+<info added on 2025-05-03T23:13:03.691Z>
+Define a clear schema for each work body, including fields for title, description, and an array of image URLs.
+
+The implementation plan is as follows:
+
+1. Create a new file `public/data/workBodies.json` to store all work body information
+2. Structure the file as a JSON array `[]` to contain multiple work body objects
+3. Define each work body object with the following properties:
+   - `id`: A unique string identifier (e.g., "body-1")
+   - `title`: A descriptive title for the body of work (e.g., "Body of Work 1")
+   - `description`: A detailed text description of the work body
+   - `images`: An array of strings containing paths to images (e.g., ["/images/work/body1/img1.jpg", ...])
+4. Populate the JSON file with 2-3 placeholder entries to demonstrate the structure
+5. Ensure the file is properly formatted and validate the JSON structure
+6. Place the file in the correct location to be accessible by the Work page components
+</info added on 2025-05-03T23:13:03.691Z>
+
+## 3. Implement WorkContext for Data Sharing [done]
+### Dependencies: 4.2
+### Description: Develop a context provider (WorkContext) to make work bodies data accessible throughout the component tree.
+### Details:
+Create a context in the context directory, load data from workBodies.json, and wrap the application or relevant subtree with the provider.
+<info added on 2025-05-03T23:13:37.598Z>
+Create a context in the context directory, load data from workBodies.json, and wrap the application or relevant subtree with the provider.
+
+Implementation plan:
+1. Create a new `src/context` directory to house all context providers
+2. Create `src/context/WorkContext.jsx` file
+3. In WorkContext.jsx:
+   - Import necessary React hooks (createContext, useContext, useState, useEffect)
+   - Create the context with `const WorkContext = createContext()`
+   - Implement a `WorkProvider` component that accepts children as props
+   - Inside WorkProvider, use useState to manage workBodies data
+   - Add useEffect to fetch data from `/data/workBodies.json` when the component mounts
+   - Return a context provider that passes workBodies data as value: `<WorkContext.Provider value={workBodies}>{children}</WorkContext.Provider>`
+   - Export both the WorkProvider component and a custom hook called `useWorkData` that returns `useContext(WorkContext)`
+4. Modify `src/main.jsx` to wrap the `<App />` component with `<WorkProvider>` to make work data available throughout the application
+</info added on 2025-05-03T23:13:37.598Z>
+
+## 4. Build Body of Work Display and Navigation Logic [done]
+### Dependencies: 4.3
+### Description: Develop the UI and logic to display a single body of work, including the sequence: first image, description, and additional images, with navigation via clicks and arrow keys.
+### Details:
+Implement state management for current body and image index, and handle navigation events as described.
+<info added on 2025-05-03T23:14:21.360Z>
+Implement state management for current body and image index, and handle navigation events as described.
+
+Implementation plan:
+1. In `WorkPage.jsx`, import and utilize the `useWorkData()` hook to access work data from context.
+2. Implement a useEffect hook that triggers when params.workId changes:
+   - Handle loading states and potential errors from context
+   - Find the specific body of work matching params.workId from the context's workBodies array
+   - Implement fallback logic for cases where no match is found or workId is not provided
+   - Set the current body using setCurrentBody(foundBody)
+   - Reset the current index to 0 with setCurrentIndex(0)
+3. Create navigation handler functions:
+   - handleNext() - increment currentIndex within bounds of currentBody.images.length + 1
+   - handlePrevious() - decrement currentIndex with lower bound of 0
+4. Add keyboard navigation support:
+   - Implement a useEffect with a keydown event listener
+   - Map ArrowRight to handleNext() and ArrowLeft to handlePrevious()
+   - Clean up event listener on component unmount
+5. Structure the component's return:
+   - Display appropriate loading, error, or "not found" messages based on state
+   - When currentBody is available, conditionally render either an image or description text based on currentIndex
+   - Attach onClick={handleNext} to the content wrapper for mouse navigation
+</info added on 2025-05-03T23:14:21.360Z>
+
+## 5. Enhance Interactivity with Custom Cursor and State Management [done]
+### Dependencies: 4.4
+### Description: Add a custom cursor for clickable images and manage state to track the current image index within a body of work.
+### Details:
+Apply custom cursor styles on hover and ensure state updates correctly as users navigate.
+<info added on 2025-05-03T23:15:00.506Z>
+Apply custom cursor styles on hover and ensure state updates correctly as users navigate.
+
+Implementation plan for custom cursor:
+1. Create a dedicated CSS module file `src/pages/WorkPage.module.css` for styling
+2. Define a `.clickableArea` class with `cursor: pointer` property (or implement a custom cursor design)
+3. Import the CSS module in `WorkPage.jsx` component
+4. Apply the `styles.clickableArea` class to the main wrapper `div` containing clickable elements
+5. Remove any existing inline cursor styles to maintain consistency
+6. Ensure the cursor changes appropriately when hovering over navigable elements
+</info added on 2025-05-03T23:15:00.506Z>
+

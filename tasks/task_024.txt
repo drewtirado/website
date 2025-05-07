@@ -1,0 +1,225 @@
+# Task ID: 24
+# Title: Connect Netlify CMS to React App
+# Status: pending
+# Dependencies: 17, 18, 19, 20, 21, 22
+# Priority: high
+# Description: Integrate the Netlify CMS with the React frontend to enable content management.
+# Details:
+1. Install required dependencies:
+```bash
+npm install netlify-cms-app react-netlify-cms gatsby-source-filesystem
+```
+
+2. Create a CMS configuration file at `src/cms/cms.js`:
+```javascript
+import CMS from 'netlify-cms-app';
+import { Widget as IdWidget } from 'netlify-cms-widget-id';
+
+// Register custom widgets if needed
+CMS.registerWidget('id', IdWidget);
+
+// Initialize the CMS
+CMS.init();
+```
+
+3. Create a data fetching utility at `src/utils/cms-data.js`:
+```javascript
+// This utility will fetch data from the local CMS files during development
+// and from the Netlify CMS API in production
+
+export const fetchHomeImages = async () => {
+  if (process.env.NODE_ENV === 'development') {
+    // In development, fetch from local mock data
+    const response = await fetch('/mock-data/home.json');
+    return response.json();
+  } else {
+    // In production, fetch from Netlify CMS
+    // The actual implementation will depend on how Netlify CMS stores the data
+    // This is a simplified example
+    const response = await fetch('/.netlify/git/github/content/home');
+    return response.json();
+  }
+};
+
+export const fetchWorks = async () => {
+  if (process.env.NODE_ENV === 'development') {
+    const response = await fetch('/mock-data/works.json');
+    return response.json();
+  } else {
+    const response = await fetch('/.netlify/git/github/content/work');
+    return response.json();
+  }
+};
+
+export const fetchJournalEntries = async () => {
+  if (process.env.NODE_ENV === 'development') {
+    const response = await fetch('/mock-data/journal.json');
+    return response.json();
+  } else {
+    const response = await fetch('/.netlify/git/github/content/journal');
+    return response.json();
+  }
+};
+
+export const fetchShopItems = async () => {
+  if (process.env.NODE_ENV === 'development') {
+    const response = await fetch('/mock-data/shop.json');
+    return response.json();
+  } else {
+    const response = await fetch('/.netlify/git/github/content/shop');
+    return response.json();
+  }
+};
+
+export const fetchInfo = async () => {
+  if (process.env.NODE_ENV === 'development') {
+    const response = await fetch('/mock-data/info.json');
+    return response.json();
+  } else {
+    const response = await fetch('/.netlify/git/github/content/info.md');
+    return response.json();
+  }
+};
+```
+
+4. Update the page components to use the data fetching utilities:
+```javascript
+// Example for HomePage.jsx
+import { useEffect, useState } from 'react';
+import { fetchHomeImages } from '../utils/cms-data';
+
+const HomePage = () => {
+  const [images, setImages] = useState([]);
+  const [currentImage, setCurrentImage] = useState(null);
+  
+  useEffect(() => {
+    const loadImages = async () => {
+      try {
+        const data = await fetchHomeImages();
+        setImages(data);
+        if (data.length > 0) {
+          setCurrentImage(data[Math.floor(Math.random() * data.length)]);
+        }
+      } catch (error) {
+        console.error('Error loading home images:', error);
+      }
+    };
+    
+    loadImages();
+  }, []);
+  
+  // Rest of the component...
+};
+```
+
+5. Configure Netlify Identity for authentication:
+```html
+<!-- public/admin/index.html -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Content Manager</title>
+    <!-- Include the Netlify Identity Widget -->
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  </head>
+  <body>
+    <script src="https://unpkg.com/netlify-cms@^2.0.0/dist/netlify-cms.js"></script>
+    <script>
+      // Check if user is logged in
+      if (window.netlifyIdentity) {
+        window.netlifyIdentity.on("init", user => {
+          if (!user) {
+            window.netlifyIdentity.on("login", () => {
+              document.location.href = "/admin/";
+            });
+          }
+        });
+      }
+    </script>
+  </body>
+</html>
+```
+
+6. Add Netlify Identity widget to the main app:
+```javascript
+// src/main.jsx
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import App from './App.jsx'
+import './index.css'
+
+// Check if we need to redirect to the admin page after login
+if (window.netlifyIdentity) {
+  window.netlifyIdentity.on("init", user => {
+    if (!user) {
+      window.netlifyIdentity.on("login", () => {
+        document.location.href = "/admin/";
+      });
+    }
+  });
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+)
+```
+
+7. Create mock data files for development in the `public/mock-data/` directory
+
+8. Configure Netlify build settings in `netlify.toml`:
+```toml
+[build]
+  publish = "dist"
+  command = "npm run build"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+```
+
+# Test Strategy:
+1. Verify that the CMS admin interface loads correctly
+2. Test user authentication with Netlify Identity
+3. Create test content in each collection and verify it appears in the frontend
+4. Test image uploads and verify they display correctly
+5. Verify that content updates in the CMS are reflected in the frontend
+6. Test the CMS on different browsers and devices
+7. Verify that the mock data works correctly in development mode
+8. Test error handling when CMS data cannot be fetched
+
+# Subtasks:
+## 1. Install and Configure Netlify CMS Dependencies [pending]
+### Dependencies: None
+### Description: Set up the required packages and initial configuration files for integrating Netlify CMS with the React app.
+### Details:
+Install netlify-cms-app, react-netlify-cms, and any other required dependencies. Create the initial CMS configuration file (e.g., src/cms/cms.js) and ensure Netlify CMS is initialized and accessible at the /admin route.
+
+## 2. Create and Configure CMS Content Collections [pending]
+### Dependencies: 24.1
+### Description: Define the content structure and collections managed by Netlify CMS.
+### Details:
+Create a config.yml file to specify collections (e.g., home images, works, journal entries, shop items, info) and their fields. Ensure the CMS UI reflects these collections for content editing.
+
+## 3. Implement Data Fetching Utilities for CMS Content [pending]
+### Dependencies: 24.2
+### Description: Develop utility functions to fetch content from local mock data during development and from the Netlify CMS API in production.
+### Details:
+Create utility functions (e.g., fetchHomeImages, fetchWorks, etc.) in src/utils/cms-data.js to handle data retrieval logic based on the environment.
+
+## 4. Integrate CMS Data into React Components [pending]
+### Dependencies: 24.3
+### Description: Update React page components to consume data from the CMS data fetching utilities.
+### Details:
+Modify relevant React components (e.g., HomePage.jsx) to use the data fetching utilities, manage state, and render CMS-managed content dynamically.
+
+## 5. Set Up Netlify Identity and Authentication [pending]
+### Dependencies: 24.1
+### Description: Configure Netlify Identity for secure CMS access and ensure authentication flows are handled in both the admin interface and main app.
+### Details:
+Add the Netlify Identity widget to public/admin/index.html and the main app entry point. Implement logic to handle login and redirect users appropriately.
+

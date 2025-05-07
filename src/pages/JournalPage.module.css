@@ -1,0 +1,15 @@
+/* JournalPage.module.css */
+
+.journalPage {
+  max-width: 800px; /* Limit content width */
+  margin: 0 auto; /* Center the content */
+  padding: 2rem 0; /* Add some vertical padding */
+}
+
+.journalPage h1 {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-weight: 300; /* Lighter heading */
+}
+
+/* Spacing handled by JournalEntry margin below */ 

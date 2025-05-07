@@ -1,0 +1,212 @@
+# Task ID: 30
+# Title: Create CMS Usage Guide for Photographer
+# Status: pending
+# Dependencies: 24, 28, 29
+# Priority: medium
+# Description: Develop a comprehensive guide for the photographer on how to use the Netlify CMS to manage their portfolio content.
+# Details:
+1. Create a markdown document in the project repository:
+```markdown
+# Photographer Portfolio CMS Guide
+
+## Introduction
+This guide will help you manage the content of your portfolio website using Netlify CMS. The content management system allows you to update your portfolio without needing to edit code.
+
+## Accessing the CMS
+1. Go to [your-website.com/admin](https://your-website.com/admin)
+2. Log in using your email and password
+3. You'll see the CMS dashboard with all content collections
+
+## Managing Content
+
+### Home Page
+The Home page displays a rotating selection of images.
+
+1. Click on "Home" in the collections menu
+2. To add a new image:
+   - Click "New Home" button
+   - Add a title (for your reference only)
+   - Upload an image
+   - Click "Save"
+3. To edit or remove an existing image:
+   - Click on the image entry in the list
+   - Make your changes or click "Delete entry"
+   - Click "Save"
+
+### Work Section
+The Work section contains your portfolio organized by categories.
+
+1. Click on "Work" in the collections menu
+2. To add a new work:
+   - Click "New Work" button
+   - Fill in the title
+   - Select or create a category
+   - Upload a featured image
+   - Write a description
+   - Add gallery images (click "Add gallery" for each image)
+   - Click "Save"
+3. To edit an existing work:
+   - Click on the work entry in the list
+   - Make your changes
+   - Click "Save"
+
+### Journal
+The Journal section contains your posts, which can be text, single image, or gallery.
+
+1. Click on "Journal" in the collections menu
+2. To add a new entry:
+   - Click "New Journal" button
+   - Fill in the title
+   - Select the date
+   - Choose the type (text, image, gallery)
+   - Write your content
+   - If type is image or gallery, add images
+   - Click "Save"
+3. To edit an existing entry:
+   - Click on the entry in the list
+   - Make your changes
+   - Click "Save"
+
+### Shop
+The Shop section displays prints available for purchase.
+
+1. Click on "Shop" in the collections menu
+2. To add a new item:
+   - Click "New Shop" button
+   - Fill in the title
+   - Select or create a category
+   - Upload an image
+   - Set the price
+   - Write a description
+   - Set availability
+   - Click "Save"
+3. To edit an existing item:
+   - Click on the item in the list
+   - Make your changes
+   - Click "Save"
+
+### Info Page
+The Info page contains your bio and contact information.
+
+1. Click on "Info" in the collections menu
+2. Edit your bio, email, and social media links
+3. Click "Save"
+
+## Working with Images
+
+### Image Guidelines
+- Use high-quality images (recommended resolution: 2000px on the longest side)
+- Keep file sizes reasonable (under 500KB if possible)
+- Use JPG format for photographs
+- Use descriptive filenames
+
+### Image Editing
+The CMS includes basic image editing capabilities:
+1. After uploading an image, click the "Edit" button
+2. You can crop, rotate, and adjust the image
+3. Click "Save" when finished
+
+## Publishing Changes
+
+When you save changes, they will be:
+1. Saved as a draft (if using Editorial Workflow)
+2. Published immediately to the live site (if not using Editorial Workflow)
+
+With Editorial Workflow:
+1. After saving, you'll see options for "Draft," "In Review," and "Ready"
+2. Move the entry to "Ready" when you want to publish
+3. Click the "Publish" button
+
+## Getting Help
+
+If you encounter any issues with the CMS:
+1. Check this guide first
+2. Contact your website administrator at [admin@example.com](mailto:admin@example.com)
+3. Include screenshots and a detailed description of the problem
+```
+
+2. Create a video tutorial series:
+   - Record short, focused videos for each section of the CMS
+   - Upload to a private YouTube channel or host directly
+   - Embed links in the documentation
+
+3. Add an in-app help section:
+```html
+<!-- public/admin/index.html -->
+<script>
+  CMS.registerPreviewTemplate('help', () => {
+    return h('div', {}, [
+      h('h1', {}, 'CMS Help'),
+      h('p', {}, 'This is the built-in help section for your portfolio CMS.'),
+      // Add more help content here
+    ]);
+  });
+</script>
+```
+
+4. Schedule a training session with the photographer:
+   - Prepare a demonstration of all CMS features
+   - Walk through common tasks step-by-step
+   - Allow time for questions and practice
+
+5. Create quick reference cards for common tasks:
+```markdown
+## Quick Reference: Adding a New Work
+
+1. Go to /admin
+2. Click "Work" collection
+3. Click "New Work"
+4. Fill in: Title, Category, Featured Image
+5. Add Description
+6. Add Gallery Images
+7. Click "Save"
+8. Publish
+```
+
+6. Set up example content for each collection type
+
+7. Provide contact information for ongoing support
+
+# Test Strategy:
+1. Have a non-technical user review the guide for clarity and completeness
+2. Test all procedures in the guide to ensure they match the actual CMS functionality
+3. Verify that image guidelines are appropriate for the site's design
+4. Test the guide on different devices (desktop, tablet, mobile)
+5. Check that all links in the documentation work correctly
+6. Verify that the quick reference cards cover the most common tasks
+7. Test the in-app help section if implemented
+8. Ensure the guide addresses potential error scenarios
+9. Verify that contact information for support is correct
+10. Check that the guide is accessible and easy to navigate
+
+# Subtasks:
+## 1. Draft Comprehensive Markdown Guide [pending]
+### Dependencies: None
+### Description: Create a detailed markdown document in the project repository that explains how to use Netlify CMS for all portfolio sections, including Home, Work, Journal, Shop, and Info pages.
+### Details:
+Include step-by-step instructions, image guidelines, publishing workflow, and troubleshooting tips tailored for photographers.
+
+## 2. Produce Video Tutorial Series [pending]
+### Dependencies: 30.1
+### Description: Record and edit a series of short, focused video tutorials demonstrating key CMS features and workflows for each portfolio section.
+### Details:
+Host videos on a private platform and embed or link them within the markdown guide for easy access.
+
+## 3. Implement In-App Help Section [pending]
+### Dependencies: 30.1
+### Description: Add a built-in help section directly within the Netlify CMS admin interface to provide quick reference and support.
+### Details:
+Use custom scripts or CMS configuration to display help content relevant to the photographer’s workflow.
+
+## 4. Conduct Live Training Session [pending]
+### Dependencies: 30.1, 30.2, 30.3
+### Description: Schedule and deliver a live training session with the photographer to demonstrate CMS usage and answer questions.
+### Details:
+Prepare a walkthrough of all major CMS features, allow hands-on practice, and address any user concerns.
+
+## 5. Create Quick Reference Cards [pending]
+### Dependencies: 30.1
+### Description: Develop concise quick reference cards for common CMS tasks, such as adding new work, editing images, and publishing changes.
+### Details:
+Format cards for easy printing or digital access, and distribute them alongside the main documentation.
+

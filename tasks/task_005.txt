@@ -1,0 +1,204 @@
+# Task ID: 5
+# Title: Journal Page Implementation
+# Status: done
+# Dependencies: 1, 2
+# Priority: medium
+# Description: Create the Journal page displaying informal posts (text, images, poems) in reverse chronological order with appropriate rendering for each content type.
+# Details:
+1. Create a `JournalPage.jsx` component in the pages folder
+2. Set up data structure for journal entries in `/src/data/journalEntries.json`
+3. Implement components for each content type (text, image, poem)
+4. Sort entries by date in reverse chronological order
+5. Style each content type appropriately
+6. Add support for tags
+7. Example implementation:
+```jsx
+const JournalPage = () => {
+  const [entries, setEntries] = useState([]);
+  
+  useEffect(() => {
+    fetch('/src/data/journalEntries.json')
+      .then(res => res.json())
+      .then(data => {
+        // Sort by date in reverse chronological order
+        const sortedEntries = data.sort((a, b) => 
+          new Date(b.date) - new Date(a.date)
+        );
+        setEntries(sortedEntries);
+      });
+  }, []);
+  
+  const renderEntryContent = (entry) => {
+    switch (entry.type) {
+      case 'text':
+        return (
+          <div className="journal-text">
+            <p>{entry.textContent}</p>
+          </div>
+        );
+      case 'image':
+        return (
+          <div className="journal-image">
+            <img src={entry.image} alt={entry.title} />
+            {entry.caption && <p className="caption">{entry.caption}</p>}
+          </div>
+        );
+      case 'poem':
+        return (
+          <div className="journal-poem">
+            <pre>{entry.textContent}</pre>
+          </div>
+        );
+      default:
+        return <p>Unknown entry type</p>;
+    }
+  };
+  
+  return (
+    <div className="journal-page">
+      {entries.map((entry, index) => (
+        <article key={index} className="journal-entry">
+          <header>
+            <h2>{entry.title}</h2>
+            <time dateTime={entry.date}>
+              {new Date(entry.date).toLocaleDateString()}
+            </time>
+          </header>
+          {renderEntryContent(entry)}
+          {entry.tags && entry.tags.length > 0 && (
+            <footer className="entry-tags">
+              {entry.tags.map((tag, i) => (
+                <span key={i} className="tag">{tag}</span>
+              ))}
+            </footer>
+          )}
+        </article>
+      ))}
+    </div>
+  );
+};
+```
+
+# Test Strategy:
+1. Verify entries are displayed in reverse chronological order
+2. Test rendering of each content type (text, image, poem)
+3. Confirm that dates are formatted correctly
+4. Test responsive behavior on different screen sizes
+5. Verify that tags are displayed correctly
+6. Test image loading performance
+
+# Subtasks:
+## 1. Design Data Structure for Journal Entries [done]
+### Dependencies: None
+### Description: Define and create the JSON schema for journal entries, supporting text, image, and poem types, including fields for title, date, content, and tags.
+### Details:
+Establish a clear and extensible structure in `/src/data/journalEntries.json` to store all necessary information for each entry type.
+<info added on 2025-05-03T23:35:08.240Z>
+Create a file at `public/data/journalEntries.json` instead of the previously mentioned path. Structure the file as a JSON array that will contain all journal entries. Each entry should follow this schema:
+
+Required fields for all entry types:
+- `id`: string - Unique identifier for each entry
+- `title`: string - Title of the journal entry
+- `date`: string - ISO 8601 formatted date (YYYY-MM-DD)
+- `type`: string - Entry type, one of: "text", "image", or "poem"
+- `tags`: array of strings - Categories or keywords for filtering
+
+Type-specific fields:
+- For "text" and "poem" types:
+  - `textContent`: string - The main content of the entry
+- For "image" type:
+  - `image`: string - Path to the image file
+  - `caption`: string - Optional description of the image
+
+Include 3-4 placeholder entries covering different entry types to demonstrate the structure and provide initial content for testing. These entries will serve as examples for the implementation of journal entry components in subtask 5.2.
+</info added on 2025-05-03T23:35:08.240Z>
+
+## 2. Implement Journal Entry Components [done]
+### Dependencies: 5.1
+### Description: Develop React components to render each content type (text, image, poem) with appropriate formatting and structure.
+### Details:
+Create separate components or rendering logic for each entry type, ensuring correct display of content and captions where applicable.
+<info added on 2025-05-03T23:35:43.818Z>
+Create separate components or rendering logic for each entry type, ensuring correct display of content and captions where applicable.
+
+Implementation Plan:
+1. Create `src/components/JournalEntry.jsx` as the main component for rendering journal entries
+2. Design the component to accept an `entry` object as a prop containing all necessary data
+3. Implement common elements for all entry types:
+   - Title section with `<h2>{entry.title}</h2>`
+   - Formatted date display using `<time>{formatted date}</time>`
+   - Footer section with tags using `<footer>{tags}</footer>`
+4. Implement conditional rendering based on `entry.type`:
+   - For "text" type: Render content in paragraph tags `<p>{entry.textContent}</p>`
+   - For "image" type: Render `<img>` element for `entry.image` with optional caption in `<p>` tags
+   - For "poem" type: Preserve formatting with `<pre>{entry.textContent}</pre>`
+5. Export the `JournalEntry` component as the default export
+6. Ensure all components handle edge cases (missing data, etc.) gracefully
+</info added on 2025-05-03T23:35:43.818Z>
+
+## 3. Build Journal Page Layout and Data Fetching [done]
+### Dependencies: 5.1, 5.2
+### Description: Create the `JournalPage.jsx` component to fetch, sort, and display journal entries in reverse chronological order.
+### Details:
+Implement data fetching from the JSON file, sort entries by date (newest first), and map over entries to render them using the appropriate components.
+<info added on 2025-05-03T23:36:34.752Z>
+Implementation plan for the Journal Page:
+
+1. Update `WorkContext.jsx`:
+   - Add `journalEntries` state with initial value of `null`
+   - Include fetch for `/data/journalEntries.json` in the existing `Promise.all` call
+   - Set the `journalEntries` state in the `.then()` callback
+   - Add `journalEntries` to the context `value` object to make it available throughout the app
+
+2. Create `src/pages/JournalPage.jsx`:
+   - Import necessary dependencies: `React`, `useState`, `useEffect`, `useWorkData` hook, and `JournalEntry` component
+   - Use the `useWorkData` hook to access `journalEntries`, `loading`, and `error` states
+   - Create a local `sortedEntries` state initialized as an empty array
+   - Implement a `useEffect` hook that triggers when `journalEntries` changes:
+     - Check if `journalEntries` exists
+     - If it does, sort entries by date in descending order (newest first)
+     - Update the `sortedEntries` state with the sorted array
+   - Handle loading and error states in the UI
+   - In the main render, map over `sortedEntries` and render a `<JournalEntry>` component for each entry
+   - Pass the entry data as props: `<JournalEntry key={entry.id} entry={entry} />`
+
+3. Update `App.jsx`:
+   - Import the new `JournalPage` component
+   - Add a route for `/journal` that renders the `JournalPage` component
+</info added on 2025-05-03T23:36:34.752Z>
+
+## 4. Style Journal Page and Entry Types [done]
+### Dependencies: 5.2, 5.3
+### Description: Apply distinct and cohesive styling to the journal page and each content type for clarity and visual appeal.
+### Details:
+Use CSS or a styling framework to differentiate text, image, and poem entries, and ensure the overall page layout is user-friendly.
+<info added on 2025-05-03T23:37:29.736Z>
+Use CSS or a styling framework to differentiate text, image, and poem entries, and ensure the overall page layout is user-friendly.
+
+Implementation plan:
+1. Create `src/pages/JournalPage.module.css` for page-level styling
+2. Create `src/components/JournalEntry.module.css` for entry-specific styling
+3. In JournalPage.module.css:
+   - Define max-width container for content
+   - Set appropriate spacing between entries
+   - Add responsive layout adjustments
+4. In JournalEntry.module.css:
+   - Style the entry container with borders, padding, and shadows
+   - Format entry headers (title, date)
+   - Create distinct styling for each content type:
+     - Text entries: typography, paragraph spacing
+     - Image entries: image containers, captions
+     - Poem entries: special formatting, line spacing
+   - Style the tags footer section
+   - Format individual tags with appropriate colors and spacing
+5. Import and apply the CSS modules in their respective components:
+   - JournalPage.jsx
+   - JournalEntry.jsx
+</info added on 2025-05-03T23:37:29.736Z>
+
+## 5. Implement Tag Support and Display [done]
+### Dependencies: 5.3, 5.4
+### Description: Add functionality to display tags for each journal entry and style them appropriately.
+### Details:
+Ensure tags are rendered for entries that include them, and apply styles to make tags easily distinguishable.
+

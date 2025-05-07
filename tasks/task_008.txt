@@ -1,0 +1,160 @@
+# Task ID: 8
+# Title: Netlify CMS Integration
+# Status: pending
+# Dependencies: 1
+# Priority: high
+# Description: Set up Netlify CMS for content management with Git-based storage and Netlify Identity for authentication.
+# Details:
+1. Install Netlify CMS: `npm install netlify-cms-app`
+2. Create an admin folder in the public directory with `index.html` and `config.yml`
+3. Set up Netlify Identity for authentication
+4. Configure collections in `config.yml` for all content types (Home, Work, Journal, Shop, Info)
+5. Define fields for each collection based on the data structures
+6. Set up preview templates for content types
+7. Example `public/admin/index.html`:
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Content Manager</title>
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+</head>
+<body>
+  <script src="https://unpkg.com/netlify-cms@^2.0.0/dist/netlify-cms.js"></script>
+</body>
+</html>
+```
+8. Example `public/admin/config.yml`:
+```yaml
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "public/images/uploads"
+public_folder: "/images/uploads"
+
+collections:
+  - name: "home"
+    label: "Home Page"
+    files:
+      - name: "homeImages"
+        label: "Home Images"
+        file: "src/data/homeImages.json"
+        fields:
+          - { label: "Images", name: "images", widget: "list", field: { label: "Image", name: "image", widget: "image" } }
+  
+  - name: "work"
+    label: "Work"
+    folder: "src/data/work"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Description", name: "description", widget: "text" }
+      - { label: "Images", name: "images", widget: "list", field: { label: "Image", name: "image", widget: "image" } }
+  
+  - name: "journal"
+    label: "Journal"
+    folder: "src/data/journal"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Publish Date", name: "date", widget: "datetime" }
+      - { label: "Content Type", name: "type", widget: "select", options: ["text", "image", "poem"] }
+      - { label: "Text Content", name: "textContent", widget: "markdown", required: false }
+      - { label: "Image", name: "image", widget: "image", required: false }
+      - { label: "Caption", name: "caption", widget: "string", required: false }
+      - { label: "Tags", name: "tags", widget: "list", required: false }
+  
+  - name: "shop"
+    label: "Shop"
+    folder: "src/data/shop"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Image", name: "image", widget: "image" }
+      - { label: "Description", name: "description", widget: "text" }
+      - { label: "Edition Type", name: "edition", widget: "select", options: ["open", "limited"] }
+      - { label: "Total Prints (Limited Edition)", name: "total", widget: "number", required: false }
+      - { label: "Available Prints", name: "available", widget: "number" }
+      - { label: "Price", name: "price", widget: "number" }
+  
+  - name: "info"
+    label: "Info Page"
+    files:
+      - name: "info"
+        label: "Info Content"
+        file: "src/data/info.json"
+        fields:
+          - { label: "Bio", name: "bio", widget: "markdown" }
+          - { label: "CV", name: "cv", widget: "markdown" }
+          - { label: "Email", name: "email", widget: "string" }
+```
+
+# Test Strategy:
+1. Test Netlify Identity authentication
+2. Verify that all collections are correctly configured
+3. Test creating, updating, and deleting content for each collection
+4. Confirm that media uploads work correctly
+5. Verify that changes in the CMS are correctly reflected in the site after rebuilding
+
+# Subtasks:
+## 1. Install and Initialize Netlify CMS [done]
+### Dependencies: None
+### Description: Install Netlify CMS and set up the admin interface in the public directory.
+### Details:
+Run `npm install netlify-cms-app`. Create a `public/admin` folder containing `index.html` and `config.yml` to initialize the CMS interface.
+<info added on 2025-05-04T00:08:59.545Z>
+Run `npm install netlify-cms-app`. Create a `public/admin` folder containing `index.html` and `config.yml` to initialize the CMS interface.
+
+Encountered React version incompatibility issue: Project uses React 19, while netlify-cms-app requires React 16/17. Switching to `decap-cms-app`, which is the community-maintained fork of Netlify CMS with potentially better compatibility with newer React versions. Will install using `npm install decap-cms-app` instead. The setup process remains similar - creating the `public/admin` folder with `index.html` and `config.yml`, but will update imports and configuration to use decap-cms instead of netlify-cms.
+</info added on 2025-05-04T00:08:59.545Z>
+<info added on 2025-05-04T00:09:16.693Z>
+The installation of `decap-cms-app` also encountered React version incompatibility issues. The package requires React 18, but our project is using React 19. As a workaround, we'll attempt to install the package using the `--legacy-peer-deps` flag: `npm install decap-cms-app --legacy-peer-deps`. 
+
+This approach bypasses peer dependency checks, which could potentially lead to runtime issues, but it's worth trying as a next step. If successful, we'll proceed with creating the `public/admin` folder containing `index.html` and `config.yml` files to initialize the CMS interface. If this approach fails or causes runtime issues, we may need to consider downgrading React or exploring alternative CMS solutions that are compatible with React 19.
+</info added on 2025-05-04T00:09:16.693Z>
+<info added on 2025-05-04T00:17:33.488Z>
+The installation of `decap-cms-app` was successful using the `--legacy-peer-deps` flag, which allowed us to bypass the React version compatibility issues. 
+
+Created the required directory structure in `public/admin/` with two key files:
+
+1. `index.html` - Set up with the proper HTML structure including:
+   - The necessary DOCTYPE and HTML tags
+   - Required meta tags in the head section
+   - Script tags for loading the Netlify Identity widget
+   - Script tags for loading the Decap CMS UMD bundle
+
+2. `config.yml` - Created as an empty placeholder file that will be configured in the next subtask when setting up Netlify Identity and Git Gateway.
+
+The admin interface structure is now in place, ready for configuration in the next step. The use of the UMD bundle approach should help avoid further React version compatibility issues since it loads Decap CMS as a standalone script rather than as a React component.
+</info added on 2025-05-04T00:17:33.488Z>
+
+## 2. Configure Netlify Identity and Git Gateway [pending]
+### Dependencies: 8.1
+### Description: Enable Netlify Identity and Git Gateway for authentication and Git-based content management.
+### Details:
+In the Netlify UI, go to Site configuration > Identity and enable Identity. Under Services, enable Git Gateway. Adjust registration settings and external providers as needed.[1][5]
+
+## 3. Define Content Collections and Fields in config.yml [pending]
+### Dependencies: 8.1
+### Description: Set up collections and fields for all content types in the CMS configuration file.
+### Details:
+Edit `public/admin/config.yml` to define collections for Home, Work, Journal, Shop, and Info, specifying fields and data structures as required.
+
+## 4. Set Up Media and Public Folders [pending]
+### Dependencies: 8.3
+### Description: Configure media and public folders for image uploads and asset management.
+### Details:
+In `config.yml`, set `media_folder` and `public_folder` paths to manage uploaded images and files.
+
+## 5. Implement Preview Templates for Content Types [pending]
+### Dependencies: 8.3
+### Description: Create preview templates for each content type to enable live previews in the CMS.
+### Details:
+Develop and register preview templates for Home, Work, Journal, Shop, and Info collections using Netlify CMS's preview capabilities.
+

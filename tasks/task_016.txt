@@ -1,0 +1,58 @@
+# Task ID: 16
+# Title: Initialize Vite React Project
+# Status: pending
+# Dependencies: None
+# Priority: high
+# Description: Set up the initial project structure using Vite and React, configure essential dependencies and project architecture.
+# Details:
+1. Install Node.js and npm if not already installed
+2. Create a new Vite project with React template: `npm create vite@latest photographer-portfolio -- --template react`
+3. Navigate to project directory: `cd photographer-portfolio`
+4. Install dependencies: `npm install`
+5. Set up project structure:
+   - `/src/components/` - For reusable UI components
+   - `/src/pages/` - For page components (Home, Work, Journal, Shop, Info)
+   - `/src/assets/` - For static assets
+   - `/src/styles/` - For CSS/SCSS files
+6. Configure routing using React Router: `npm install react-router-dom`
+7. Set up basic routing in App.jsx
+8. Create a basic layout component with header and navigation
+9. Test the setup with `npm run dev`
+
+# Test Strategy:
+1. Verify that the project builds without errors
+2. Confirm that the development server starts correctly
+3. Check that routing works by navigating to different placeholder pages
+4. Ensure the project structure follows best practices for React applications
+
+# Subtasks:
+## 1. Install Prerequisites and Initialize Vite React Project [pending]
+### Dependencies: None
+### Description: Ensure Node.js and npm are installed, then create a new Vite project using the React template.
+### Details:
+Verify Node.js and npm installation. Run `npm create vite@latest photographer-portfolio -- --template react` to scaffold the project.
+
+## 2. Install Project Dependencies [pending]
+### Dependencies: 16.1
+### Description: Navigate to the project directory and install all required dependencies.
+### Details:
+Change directory to `photographer-portfolio` and run `npm install` to install dependencies.
+
+## 3. Establish Project Directory Structure [pending]
+### Dependencies: 16.2
+### Description: Set up the recommended folder structure for components, pages, assets, and styles.
+### Details:
+Create `/src/components/`, `/src/pages/`, `/src/assets/`, and `/src/styles/` directories following best practices for React and Vite projects[1][2][3].
+
+## 4. Configure Routing and Layout [pending]
+### Dependencies: 16.3
+### Description: Install React Router and set up basic routing and a layout component with navigation.
+### Details:
+Install `react-router-dom`, configure routes in `App.jsx`, and create a layout component with header and navigation links.
+
+## 5. Verify Project Setup [pending]
+### Dependencies: 16.4
+### Description: Test the development server to ensure the project runs and the initial structure is functional.
+### Details:
+Run `npm run dev` and confirm the app loads with the basic layout and routing in place.
+

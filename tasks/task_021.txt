@@ -1,0 +1,146 @@
+# Task ID: 21
+# Title: Implement Shop Page with Categorized Prints
+# Status: pending
+# Dependencies: 16, 17
+# Priority: medium
+# Description: Develop the Shop page that displays prints organized by categories with pricing and availability information.
+# Details:
+1. Create `src/pages/ShopPage.jsx` component
+2. Implement state for shop items and categories:
+```jsx
+const [items, setItems] = useState([]);
+const [categories, setCategories] = useState([]);
+const [selectedCategory, setSelectedCategory] = useState('all');
+
+useEffect(() => {
+  // Fetch shop items from CMS
+  const fetchShopItems = async () => {
+    try {
+      // This will be replaced with actual CMS data fetching
+      const response = await fetch('/api/shop-items');
+      const data = await response.json();
+      
+      setItems(data);
+      
+      // Extract unique categories
+      const uniqueCategories = [...new Set(data.map(item => item.category))];
+      setCategories(['all', ...uniqueCategories]);
+    } catch (error) {
+      console.error('Error fetching shop items:', error);
+    }
+  };
+  
+  fetchShopItems();
+}, []);
+```
+3. Create category filter component:
+```jsx
+const CategoryFilter = () => (
+  <div className="category-filter">
+    <h2>Categories</h2>
+    <ul>
+      {categories.map(category => (
+        <li 
+          key={category}
+          className={selectedCategory === category ? 'active' : ''}
+          onClick={() => setSelectedCategory(category)}
+        >
+          {category === 'all' ? 'All Prints' : category}
+        </li>
+      ))}
+    </ul>
+  </div>
+);
+```
+4. Implement shop items grid:
+```jsx
+const ShopGrid = () => {
+  const filteredItems = selectedCategory === 'all'
+    ? items
+    : items.filter(item => item.category === selectedCategory);
+    
+  return (
+    <div className="shop-grid">
+      {filteredItems.map(item => (
+        <div key={item.id} className={`shop-item ${!item.available ? 'sold-out' : ''}`}>
+          <div className="item-image">
+            <img src={item.image} alt={item.title} />
+            {!item.available && <div className="sold-out-overlay">Sold Out</div>}
+          </div>
+          <div className="item-details">
+            <h3>{item.title}</h3>
+            <p className="item-category">{item.category}</p>
+            <p className="item-price">${item.price.toFixed(2)}</p>
+            <div 
+              className="item-description"
+              dangerouslySetInnerHTML={{ __html: item.description }}
+            />
+            <button 
+              className="buy-button" 
+              disabled={!item.available}
+            >
+              {item.available ? 'Buy Now' : 'Sold Out'}
+            </button>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+```
+5. Combine components in the main ShopPage component:
+```jsx
+return (
+  <div className="shop-page">
+    <h1>Print Shop</h1>
+    <div className="shop-container">
+      <CategoryFilter />
+      <ShopGrid />
+    </div>
+  </div>
+);
+```
+6. Add CSS for layout and styling
+7. For development, create a mock data file with sample shop items until CMS integration is complete
+8. Note: Actual purchase functionality would require integration with a payment processor, which is not part of this task
+
+# Test Strategy:
+1. Verify that shop items load and display in the grid
+2. Test category filtering functionality
+3. Confirm that item details (title, price, description) display correctly
+4. Test that sold-out items are properly marked and have disabled buy buttons
+5. Verify that images load correctly
+6. Check responsive behavior on different screen sizes
+7. Test that the layout adjusts appropriately for different numbers of items
+
+# Subtasks:
+## 1. Create mock data structure for shop items [pending]
+### Dependencies: None
+### Description: Develop a comprehensive mock data file with sample shop items that includes all necessary fields for the shop page until CMS integration is complete.
+### Details:
+Create a file named 'mockShopData.js' that exports an array of product objects. Each product should have: id, title, category, price, description, image URL, and availability status. Include at least 3 different categories with 4-5 items each. Ensure descriptions include HTML formatting to test the dangerouslySetInnerHTML implementation.
+
+## 2. Implement data fetching and state management [pending]
+### Dependencies: 21.1
+### Description: Complete the data fetching logic to work with mock data and implement proper state management for shop items and categories.
+### Details:
+Modify the useEffect hook to import and use the mock data instead of fetching from an API. Ensure the categories are properly extracted and the 'all' category is added. Implement error handling for future API integration. Add loading state management to show a loading indicator while data is being fetched.
+
+## 3. Build the category filter component with styling [pending]
+### Dependencies: 21.2
+### Description: Enhance the CategoryFilter component with proper styling and interactive elements for filtering products by category.
+### Details:
+Implement the CategoryFilter component with proper styling for both active and inactive states. Add hover effects for better user experience. Ensure the filter updates the selectedCategory state correctly. Style the component to be responsive for different screen sizes. Add a count of items per category in parentheses.
+
+## 4. Develop the shop items grid with product cards [pending]
+### Dependencies: 21.2
+### Description: Create a responsive grid layout for shop items with detailed product cards that display all relevant information.
+### Details:
+Implement the ShopGrid component with responsive grid layout using CSS Grid or Flexbox. Style product cards with hover effects and proper spacing. Create sold-out overlay for unavailable items. Implement responsive image handling. Add 'Add to Cart' functionality instead of 'Buy Now' to align with e-commerce best practices. Ensure product descriptions render HTML correctly.
+
+## 5. Integrate components and implement page styling [pending]
+### Dependencies: 21.3, 21.4
+### Description: Combine all components into the main ShopPage component and implement comprehensive styling for the entire page.
+### Details:
+Integrate CategoryFilter and ShopGrid components into the main ShopPage. Implement responsive layout that works well on mobile, tablet, and desktop. Add page header with title and description. Implement sorting functionality (by price, alphabetically). Add breadcrumb navigation. Create CSS for the entire page with consistent styling that matches the rest of the application. Add smooth transitions between category changes.
+

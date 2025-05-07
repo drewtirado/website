@@ -1,0 +1,20 @@
+/* Layout.module.css */
+
+.layoutContainer {
+  /* No specific styles needed here currently */
+  /* Could be used for overall page structure later */
+}
+
+.mainContent {
+  padding-left: 220px; /* Must match nav width + some gap */
+  padding-top: 2rem; /* Add some top padding */
+  padding-right: 2rem;
+  padding-bottom: 2rem;
+}
+
+/* Adjust padding for smaller screens if nav width changes */
+@media (max-width: 768px) {
+  .mainContent {
+    padding-left: 2rem; /* Reset padding when nav is hidden/overlay */
+  }
+} 

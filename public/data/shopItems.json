@@ -1,0 +1,40 @@
+[
+  {
+    "id": "print001",
+    "title": "Abstract Horizon",
+    "image": "/images/prints/abstract_horizon.jpg",
+    "description": "A vibrant abstract piece capturing the essence of a sunrise over the ocean.",
+    "edition": "open",
+    "price": 75,
+    "available": 100
+  },
+  {
+    "id": "print002",
+    "title": "City Lights",
+    "image": "/images/prints/city_lights.jpg",
+    "description": "A dynamic portrayal of a cityscape at night, shimmering with lights.",
+    "edition": "limited",
+    "price": 250,
+    "available": 10,
+    "total": 25
+  },
+  {
+    "id": "print003",
+    "title": "Forest Path",
+    "image": "/images/prints/forest_path.jpg",
+    "description": "A serene depiction of a path winding through a sunlit forest.",
+    "edition": "open",
+    "price": 80,
+    "available": 100
+  },
+  {
+    "id": "print004",
+    "title": "Mountain Peak",
+    "image": "/images/prints/mountain_peak.jpg",
+    "description": "A majestic view from a snow-capped mountain peak.",
+    "edition": "limited",
+    "price": 300,
+    "available": 5,
+    "total": 10
+  }
+] 

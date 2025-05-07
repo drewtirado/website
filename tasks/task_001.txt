@@ -1,0 +1,28 @@
+# Task ID: 1
+# Title: Project Setup with Vite React
+# Status: done
+# Dependencies: None
+# Priority: high
+# Description: Initialize the project using Vite with React template and set up the basic folder structure for the photographer's portfolio website.
+# Details:
+1. Install Node.js and npm if not already installed
+2. Create a new Vite project with React template: `npm create vite@latest photographer-portfolio -- --template react`
+3. Navigate to the project directory: `cd photographer-portfolio`
+4. Install dependencies: `npm install`
+5. Set up folder structure:
+   - `/src/components/` - For React components
+   - `/src/pages/` - For page components
+   - `/src/assets/` - For static assets
+   - `/src/data/` - For JSON data files
+   - `/src/styles/` - For CSS/SCSS files
+   - `/public/images/` - For image assets
+6. Configure basic styling with the off-white background (#f2f2f2)
+7. Set up React Router for navigation
+8. Create a basic layout component with navigation
+9. Test the setup with `npm run dev`
+
+# Test Strategy:
+1. Verify that the Vite development server starts without errors
+2. Confirm that the folder structure is correctly set up
+3. Check that React Router is properly configured
+4. Ensure the basic layout renders with the specified background color

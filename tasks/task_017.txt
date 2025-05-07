@@ -1,0 +1,130 @@
+# Task ID: 17
+# Title: Configure Netlify CMS
+# Status: pending
+# Dependencies: 16
+# Priority: high
+# Description: Set up Netlify CMS with the required collections for Home, Work, Journal, Shop, and Info sections.
+# Details:
+1. Install Netlify CMS: `npm install netlify-cms-app`
+2. Create `/public/admin/` directory
+3. Create `/public/admin/index.html` with basic CMS setup:
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Content Manager</title>
+  </head>
+  <body>
+    <script src="https://unpkg.com/netlify-cms@^2.0.0/dist/netlify-cms.js"></script>
+  </body>
+</html>
+```
+4. Create `/public/admin/config.yml` with collections configuration:
+```yaml
+backend:
+  name: git-gateway
+  branch: main
+media_folder: "public/images/uploads"
+public_folder: "/images/uploads"
+collections:
+  - name: "home"
+    label: "Home"
+    folder: "content/home"
+    create: true
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Image", name: "image", widget: "image" }
+  - name: "work"
+    label: "Work"
+    folder: "content/work"
+    create: true
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Category", name: "category", widget: "string" }
+      - { label: "Featured Image", name: "featuredImage", widget: "image" }
+      - { label: "Description", name: "description", widget: "markdown" }
+      - label: "Gallery"
+        name: "gallery"
+        widget: "list"
+        fields:
+          - { label: "Image", name: "image", widget: "image" }
+          - { label: "Caption", name: "caption", widget: "string", required: false }
+  - name: "journal"
+    label: "Journal"
+    folder: "content/journal"
+    create: true
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Date", name: "date", widget: "datetime" }
+      - { label: "Type", name: "type", widget: "select", options: ["text", "image", "gallery"] }
+      - { label: "Content", name: "content", widget: "markdown" }
+      - label: "Images"
+        name: "images"
+        widget: "list"
+        required: false
+        fields:
+          - { label: "Image", name: "image", widget: "image" }
+          - { label: "Caption", name: "caption", widget: "string", required: false }
+  - name: "shop"
+    label: "Shop"
+    folder: "content/shop"
+    create: true
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Category", name: "category", widget: "string" }
+      - { label: "Image", name: "image", widget: "image" }
+      - { label: "Price", name: "price", widget: "number" }
+      - { label: "Description", name: "description", widget: "markdown" }
+      - { label: "Available", name: "available", widget: "boolean", default: true }
+  - name: "info"
+    label: "Info"
+    file: "content/info.md"
+    fields:
+      - { label: "Bio", name: "bio", widget: "markdown" }
+      - { label: "Contact Email", name: "email", widget: "string" }
+      - { label: "Instagram", name: "instagram", widget: "string", required: false }
+      - { label: "Twitter", name: "twitter", widget: "string", required: false }
+```
+5. Create content directories: `mkdir -p content/{home,work,journal,shop}`
+6. Create a sample markdown file for each collection to test
+
+# Test Strategy:
+1. Verify that the CMS configuration files are correctly placed
+2. Test local CMS access via the admin URL
+3. Confirm that all collections are properly defined
+4. Validate that the media folder is correctly configured
+5. Test creating sample content for each collection
+
+# Subtasks:
+## 1. Configure media folder structure [pending]
+### Dependencies: None
+### Description: Set up proper media folder configuration for each collection to ensure images are stored alongside content
+### Details:
+Update the config.yml file to use collection-specific media folders instead of a global one. For each collection, add media_folder: '' and public_folder: '' to store images alongside content files. This improves compatibility with image processing libraries.
+
+## 2. Implement year/month folder structure for Journal entries [pending]
+### Dependencies: 17.1
+### Description: Modify the Journal collection to organize entries by year and month folders
+### Details:
+Update the journal collection configuration to use path: '{{year}}/{{month}}/{{slug}}' and preview_path: 'journal/{{year}}/{{month}}/{{slug}}'. Create the necessary folder structure in content/journal/ to support this organization.
+
+## 3. Add authentication and editorial workflow [pending]
+### Dependencies: None
+### Description: Configure Netlify Identity for authentication and set up the editorial workflow
+### Details:
+Add publish_mode: editorial_workflow to config.yml to enable draft/review/ready states. Include the Netlify Identity widget in the admin/index.html file. Configure user roles and permissions in the Netlify dashboard.
+
+## 4. Create custom preview templates [pending]
+### Dependencies: 17.1, 17.2
+### Description: Develop custom preview templates for each content type to accurately represent how content will appear on the site
+### Details:
+Create a new file at admin/preview-templates/index.js to register custom preview components for each collection. Develop individual preview components that match the site's styling and layout. Import these in the admin/index.js file.
+
+## 5. Set up multilingual content support [pending]
+### Dependencies: 17.2, 17.3
+### Description: Configure the CMS to handle content in multiple languages
+### Details:
+Modify the collections to support language variants by either using language-specific collections or by adding a language field to existing collections. Update the file naming pattern to include language codes (e.g., {{slug}}.{{language}}.md). Create language toggle in the admin UI.
+

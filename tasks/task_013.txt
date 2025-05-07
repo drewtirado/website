@@ -1,0 +1,100 @@
+# Task ID: 13
+# Title: Netlify Deployment Configuration
+# Status: pending
+# Dependencies: 8
+# Priority: medium
+# Description: Configure Netlify deployment with automatic rebuilds on CMS updates.
+# Details:
+1. Create a `netlify.toml` file in the project root
+2. Configure build settings and redirects
+3. Set up Netlify Identity for authentication
+4. Configure build hooks for automatic rebuilds
+5. Set up environment variables
+6. Example `netlify.toml`:
+```toml
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# Redirect all routes to index.html for SPA routing
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Headers for security
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Content-Security-Policy = "default-src 'self'; img-src 'self' data: https:; script-src 'self' 'unsafe-inline' identity.netlify.com; style-src 'self' 'unsafe-inline'; connect-src 'self' identity.netlify.com;"
+```
+7. Set up a script to trigger Netlify builds when content changes:
+```js
+// scripts/triggerBuild.js
+const fetch = require('node-fetch');
+
+const triggerNetlifyBuild = async () => {
+  const BUILD_HOOK_URL = process.env.NETLIFY_BUILD_HOOK;
+  
+  if (!BUILD_HOOK_URL) {
+    console.error('No build hook URL provided');
+    return;
+  }
+  
+  try {
+    const response = await fetch(BUILD_HOOK_URL, { method: 'POST' });
+    if (response.ok) {
+      console.log('Build triggered successfully');
+    } else {
+      console.error('Failed to trigger build:', await response.text());
+    }
+  } catch (error) {
+    console.error('Error triggering build:', error);
+  }
+};
+
+triggerNetlifyBuild();
+```
+
+# Test Strategy:
+1. Test deployment to Netlify
+2. Verify that redirects work correctly for SPA routing
+3. Test Netlify Identity authentication
+4. Verify that automatic rebuilds work when content changes
+5. Test environment variables and build hooks
+
+# Subtasks:
+## 1. Enable Netlify Identity Service [pending]
+### Dependencies: None
+### Description: Set up Netlify Identity for user authentication in the Netlify UI
+### Details:
+Navigate to Site configuration > Identity in the Netlify UI and select Enable Identity. Ensure HTTPS is working if using a custom domain. Configure registration settings (Open or Invite only) and external providers if needed.
+
+## 2. Implement Identity Widget Integration [pending]
+### Dependencies: 13.1
+### Description: Add Netlify Identity widget to the repository for frontend authentication
+### Details:
+Add the Netlify Identity widget to the project repository or develop a custom solution with the gotrue-js library. Configure the widget to work with the Identity API endpoint (https://[your-site-name].netlify.app/.netlify/identity).
+
+## 3. Configure Git Gateway [pending]
+### Dependencies: 13.1
+### Description: Enable Git Gateway to allow CMS users to make changes without direct repository access
+### Details:
+In the Netlify dashboard, go to Services > Git Gateway and click Enable Git Gateway. This authenticates with your Git host and generates an API access token. Configure roles as needed for access control.
+
+## 4. Set Up Build Hooks [pending]
+### Dependencies: 13.3
+### Description: Configure build hooks for triggering automatic rebuilds when content changes
+### Details:
+Create a build hook in the Netlify dashboard under Site settings > Build & deploy > Build hooks. Implement the triggerBuild.js script provided in the parent task, ensuring the NETLIFY_BUILD_HOOK environment variable is properly set.
+
+## 5. Finalize netlify.toml Configuration [pending]
+### Dependencies: 13.1, 13.2, 13.3, 13.4
+### Description: Complete the netlify.toml file with all necessary settings for deployment
+### Details:
+Review and finalize the netlify.toml file in the project root with build settings, redirects, headers, and security configurations as provided in the example. Ensure Content-Security-Policy includes necessary domains for Identity service.
+

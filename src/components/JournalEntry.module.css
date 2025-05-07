@@ -1,0 +1,81 @@
+/* JournalEntry.module.css */
+
+.journalEntry {
+  background-color: #fff; /* White background for entries */
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 1.5rem;
+  margin-bottom: 2rem; /* Space between entries */
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.entryHeader {
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 0.8rem;
+}
+
+.entryHeader h2 {
+  margin: 0 0 0.3rem 0;
+  font-size: 1.4rem;
+  font-weight: 500;
+}
+
+.entryHeader time {
+  font-size: 0.85rem;
+  color: #777;
+}
+
+.journalContent {
+  margin-bottom: 1rem; /* Space before tags */
+}
+
+/* Text Content */
+.textContent p {
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Image Content */
+.imageContent img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 0.5rem; /* Space before caption */
+}
+
+.imageContent .caption {
+  font-size: 0.9rem;
+  color: #555;
+  font-style: italic;
+  text-align: center;
+  margin: 0;
+}
+
+/* Poem Content */
+.poemContent p {
+  white-space: pre-wrap; /* Keep the style applied inline for now */
+  font-family: monospace; /* Optional: monospace font for poems */
+  line-height: 1.7;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+/* Tags */
+.entryTags {
+  margin-top: 1rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid #eee;
+  font-size: 0.8rem;
+  color: #888;
+}
+
+.tag {
+  display: inline-block;
+  background-color: #eee;
+  color: #555;
+  padding: 0.2rem 0.5rem;
+  border-radius: 3px;
+  margin-right: 0.5rem;
+  font-size: 0.75rem;
+} 

@@ -1,0 +1,217 @@
+# Task ID: 3
+# Title: Home Page Implementation
+# Status: done
+# Dependencies: 1, 2
+# Priority: high
+# Description: Create the Home page with a minimal design displaying two images that can be clicked to swap with random images from a pool.
+# Details:
+1. Create a `HomePage.jsx` component in the pages folder
+2. Set up a data structure for home images in `/src/data/homeImages.json`
+3. Implement state to track currently displayed images
+4. Create a function to randomly select new images from the pool (excluding currently displayed ones)
+5. Add click handlers to swap images when clicked
+6. Style the page with the specified off-white background (#f2f2f2)
+7. Implement responsive image sizing
+8. Example implementation:
+```jsx
+const HomePage = () => {
+  const [allImages, setAllImages] = useState([]);
+  const [displayedImages, setDisplayedImages] = useState([]);
+  
+  useEffect(() => {
+    // Load images from JSON file
+    fetch('/src/data/homeImages.json')
+      .then(res => res.json())
+      .then(data => {
+        setAllImages(data);
+        // Initially select two random images
+        const initialImages = getRandomImages(data, 2);
+        setDisplayedImages(initialImages);
+      });
+  }, []);
+  
+  const getRandomImages = (images, count, exclude = []) => {
+    const availableImages = images.filter(img => !exclude.includes(img));
+    const selected = [];
+    
+    for (let i = 0; i < count; i++) {
+      if (availableImages.length === 0) break;
+      const randomIndex = Math.floor(Math.random() * availableImages.length);
+      selected.push(availableImages[randomIndex]);
+      availableImages.splice(randomIndex, 1);
+    }
+    
+    return selected;
+  };
+  
+  const handleImageClick = (clickedImage) => {
+    const newImage = getRandomImages(allImages, 1, displayedImages)[0];
+    setDisplayedImages(displayedImages.map(img => 
+      img === clickedImage ? newImage : img
+    ));
+  };
+  
+  return (
+    <div className="home-page">
+      {displayedImages.map((image, index) => (
+        <img 
+          key={index} 
+          src={image} 
+          alt="Portfolio photograph" 
+          onClick={() => handleImageClick(image)} 
+          className="home-image"
+        />
+      ))}
+    </div>
+  );
+};
+```
+
+# Test Strategy:
+1. Verify that two images are displayed on page load
+2. Test that clicking an image replaces it with a random image from the pool
+3. Confirm that the same image doesn't appear twice simultaneously
+4. Test responsive behavior on different screen sizes
+5. Verify image loading performance
+
+# Subtasks:
+## 1. Create HomePage Component Structure [done]
+### Dependencies: None
+### Description: Set up the basic HomePage.jsx component with React imports and component structure
+### Details:
+Create a new file HomePage.jsx in the pages folder. Import React, useState, and useEffect hooks. Define the HomePage component with a basic return statement containing a div with className 'home-page'. Export the component as default.
+<info added on 2025-05-03T22:53:20.948Z>
+Create a new file HomePage.jsx in the src/pages folder. 
+
+Step-by-step implementation plan:
+1. Create the directory structure if it doesn't exist: src/pages/
+2. Create a new file HomePage.jsx in this directory
+3. Import the necessary React hooks at the top of the file:
+   ```jsx
+   import React, { useState, useEffect } from 'react';
+   ```
+4. Define the HomePage functional component with a basic structure:
+   ```jsx
+   function HomePage() {
+     // State and effects will be added later
+     
+     return (
+       <div className="home-page">
+         {/* Content will be added in subsequent tasks */}
+       </div>
+     );
+   }
+   ```
+5. Add the default export at the bottom of the file:
+   ```jsx
+   export default HomePage;
+   ```
+6. Open App.jsx and update it to import and use the HomePage component:
+   ```jsx
+   import HomePage from './pages/HomePage';
+   ```
+7. In the App component's return statement, include the HomePage component where appropriate.
+
+This implementation will create the basic structure needed for the HomePage component, which will be expanded upon in the next subtask to set up the image data structure.
+</info added on 2025-05-03T22:53:20.948Z>
+
+## 2. Set Up Image Data Structure [done]
+### Dependencies: 3.1
+### Description: Create the homeImages.json file and implement the state management for images
+### Details:
+Create a new file at /src/data/homeImages.json containing an array of image paths. In the HomePage component, implement useState hooks for allImages and displayedImages. Add useEffect to fetch and load the images from the JSON file when the component mounts.
+<info added on 2025-05-03T22:53:56.154Z>
+Create a new file at /src/data/homeImages.json containing an array of image paths. The JSON file should have a simple structure with placeholder image paths (e.g., ["/images/home/img1.jpg", "/images/home/img2.jpg", etc.]).
+
+In the HomePage component:
+1. Import useState and useEffect from React
+2. Set up two state variables:
+   - allImages: to store all available images from the JSON file
+   - displayedImages: to store the currently displayed images
+   - Initialize both states with empty arrays
+
+3. Implement a useEffect hook that runs once when the component mounts:
+   ```javascript
+   useEffect(() => {
+     fetch('/data/homeImages.json')
+       .then(response => response.json())
+       .then(data => {
+         setAllImages(data);
+       })
+       .catch(error => console.error('Error loading images:', error));
+   }, []);
+   ```
+
+This setup will provide the foundation for the random image selection functionality that will be implemented in the next subtask.
+</info added on 2025-05-03T22:53:56.154Z>
+
+## 3. Implement Random Image Selection [done]
+### Dependencies: 3.2
+### Description: Create the function to randomly select images from the pool
+### Details:
+Implement the getRandomImages function that takes an array of images, a count of images to select, and an optional array of images to exclude. The function should return an array of randomly selected images that aren't in the exclude array.
+<info added on 2025-05-03T22:54:36.536Z>
+Implement the getRandomImages function that takes an array of images, a count of images to select, and an optional array of images to exclude. The function should return an array of randomly selected images that aren't in the exclude array.
+
+Implementation plan:
+1. Define `getRandomImages(images, count, exclude = [])` function:
+   - Create a filtered array by removing any images that exist in the exclude array
+   - Use a randomization algorithm to select 'count' unique images from the filtered array
+   - Handle edge cases such as:
+     - When count > available images (return all available images)
+     - When images array is empty (return empty array)
+     - When exclude contains all available images (return empty array)
+
+2. Integrate the function into HomePage.jsx:
+   - In the useEffect hook, after setting allImages state with the fetched data:
+     - Call `const initialImages = getRandomImages(data, 2);`
+     - Update the displayed images with `setDisplayedImages(initialImages);`
+
+3. Update the HomePage component's return statement:
+   - Map over the displayedImages state array
+   - Render an <img> tag for each image path in the state
+   - Ensure proper key attributes are set for the mapped elements
+</info added on 2025-05-03T22:54:36.536Z>
+
+## 4. Add Image Click Handler [done]
+### Dependencies: 3.3
+### Description: Implement the functionality to swap images when clicked
+### Details:
+Create the handleImageClick function that takes a clicked image as a parameter, selects a new random image (excluding currently displayed ones), and updates the displayedImages state by replacing the clicked image with the new one.
+<info added on 2025-05-03T22:55:07.634Z>
+Create the handleImageClick function that takes a clicked image as a parameter, selects a new random image (excluding currently displayed ones), and updates the displayedImages state by replacing the clicked image with the new one.
+
+Implementation steps for handleImageClick function in HomePage.jsx:
+1. Define the function signature: handleImageClick(clickedImage)
+2. Call getRandomImages(allImages, 1, displayedImages) to get a new random image that isn't currently displayed
+3. Verify the returned array is not empty by checking newImageArr.length > 0
+4. Extract the new image from the array with newImage = newImageArr[0]
+5. Update the displayedImages state using setDisplayedImages and the map function:
+   setDisplayedImages(currentImages => currentImages.map(img => (img === clickedImage ? newImage : img)))
+   This replaces only the clicked image while preserving all other images
+</info added on 2025-05-03T22:55:07.634Z>
+
+## 5. Style the Home Page [done]
+### Dependencies: 3.4
+### Description: Implement responsive styling for the home page and images
+### Details:
+Create CSS styles for the home-page class with the specified off-white background (#f2f2f2). Add styles for the home-image class to make images responsive and properly sized. Implement a grid or flexbox layout to display the two images side by side on larger screens and stacked on mobile devices.
+<info added on 2025-05-03T22:55:43.106Z>
+Create a dedicated CSS module file for the home page styling:
+
+1. Create `src/pages/HomePage.module.css` file for component-specific styles.
+2. Implement the `.imageContainer` class with responsive behavior:
+   - For desktop: Use flexbox with `display: flex`, `justify-content: center` (or `space-around`), `align-items: center`, and `flex-wrap: wrap` to arrange images side by side.
+   - For mobile: Add a media query `@media (max-width: 768px)` that changes to `flex-direction: column` to stack images vertically.
+3. Style the `.homeImage` class for proper image display:
+   - Set `max-width: 100%` and `height: auto` to ensure images are responsive.
+   - Add `display: block` for proper spacing.
+   - For desktop view, set `flex-basis: 45%` or a fixed `max-width` to control image size in the flex container.
+   - Apply `object-fit: cover` if needed to maintain aspect ratios.
+   - Set `cursor: pointer` to indicate images are clickable.
+4. Import the CSS module in `HomePage.jsx` with `import styles from './HomePage.module.css'`.
+5. Apply the CSS classes using the module syntax (e.g., `className={styles.imageContainer}`).
+6. Remove any existing inline styles from the component.
+7. Ensure the background color is set to the specified off-white (#f2f2f2) for the home page.
+</info added on 2025-05-03T22:55:43.106Z>
+

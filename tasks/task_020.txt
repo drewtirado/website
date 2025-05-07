@@ -1,0 +1,176 @@
+# Task ID: 20
+# Title: Build Journal Page with Type-Based Rendering
+# Status: pending
+# Dependencies: 16, 17
+# Priority: medium
+# Description: Create the Journal page that displays entries with different rendering based on their type (text, image, gallery).
+# Details:
+1. Create `src/pages/JournalPage.jsx` component
+2. Implement state for journal entries:
+```jsx
+const [entries, setEntries] = useState([]);
+const [selectedEntry, setSelectedEntry] = useState(null);
+
+useEffect(() => {
+  // Fetch journal entries from CMS
+  const fetchEntries = async () => {
+    try {
+      // This will be replaced with actual CMS data fetching
+      const response = await fetch('/api/journal-entries');
+      const data = await response.json();
+      
+      // Sort entries by date (newest first)
+      const sortedEntries = data.sort((a, b) => 
+        new Date(b.date) - new Date(a.date)
+      );
+      
+      setEntries(sortedEntries);
+      if (sortedEntries.length > 0) {
+        setSelectedEntry(sortedEntries[0]);
+      }
+    } catch (error) {
+      console.error('Error fetching journal entries:', error);
+    }
+  };
+  
+  fetchEntries();
+}, []);
+```
+3. Create entry list component:
+```jsx
+const EntryList = () => (
+  <div className="entry-list">
+    <h2>Journal</h2>
+    <ul>
+      {entries.map(entry => (
+        <li 
+          key={entry.id}
+          className={selectedEntry?.id === entry.id ? 'active' : ''}
+          onClick={() => setSelectedEntry(entry)}
+        >
+          <span className="entry-date">
+            {new Date(entry.date).toLocaleDateString()}
+          </span>
+          <span className="entry-title">{entry.title}</span>
+          <span className="entry-type">{entry.type}</span>
+        </li>
+      ))}
+    </ul>
+  </div>
+);
+```
+4. Implement type-based entry renderer:
+```jsx
+const EntryRenderer = () => {
+  if (!selectedEntry) return null;
+  
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
+  
+  return (
+    <div className="entry-content">
+      <h1>{selectedEntry.title}</h1>
+      <p className="entry-date">{formatDate(selectedEntry.date)}</p>
+      
+      {selectedEntry.type === 'text' && (
+        <div 
+          className="text-content"
+          dangerouslySetInnerHTML={{ __html: selectedEntry.content }}
+        />
+      )}
+      
+      {selectedEntry.type === 'image' && (
+        <div className="image-content">
+          <img 
+            src={selectedEntry.images[0]?.image} 
+            alt={selectedEntry.images[0]?.caption || selectedEntry.title} 
+          />
+          {selectedEntry.images[0]?.caption && (
+            <p className="caption">{selectedEntry.images[0].caption}</p>
+          )}
+          <div 
+            className="text-content"
+            dangerouslySetInnerHTML={{ __html: selectedEntry.content }}
+          />
+        </div>
+      )}
+      
+      {selectedEntry.type === 'gallery' && (
+        <div className="gallery-content">
+          <div 
+            className="text-content"
+            dangerouslySetInnerHTML={{ __html: selectedEntry.content }}
+          />
+          <div className="gallery-grid">
+            {selectedEntry.images.map((img, index) => (
+              <div key={index} className="gallery-item">
+                <img src={img.image} alt={img.caption || `Gallery image ${index + 1}`} />
+                {img.caption && <p className="caption">{img.caption}</p>}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+```
+5. Combine components in the main JournalPage component:
+```jsx
+return (
+  <div className="journal-page">
+    <EntryList />
+    <EntryRenderer />
+  </div>
+);
+```
+6. Add CSS for layout and styling
+7. For development, create a mock data file with sample journal entries until CMS integration is complete
+
+# Test Strategy:
+1. Verify that journal entries load and display in the list
+2. Test that entries are sorted by date (newest first)
+3. Confirm that selecting an entry displays its content
+4. Test rendering for each entry type (text, image, gallery)
+5. Verify that dates are formatted correctly
+6. Check that images and captions display properly
+7. Test responsive behavior on different screen sizes
+8. Verify that markdown content renders correctly
+
+# Subtasks:
+## 1. Implement Entry Type Components [pending]
+### Dependencies: None
+### Description: Create separate components for each entry type (text, image, gallery) to handle their specific rendering requirements.
+### Details:
+Create three components: TextEntryComponent, ImageEntryComponent, and GalleryEntryComponent. Each component should accept the entry data as props and render the content according to its type. The TextEntryComponent should render HTML content, ImageEntryComponent should display a single image with caption and text, and GalleryEntryComponent should display multiple images in a grid layout with captions.
+
+## 2. Create Entry Selection Logic [pending]
+### Dependencies: None
+### Description: Implement the logic for selecting and highlighting entries from the list, with proper state management.
+### Details:
+Refine the EntryList component to properly handle entry selection. Implement click handlers that update the selectedEntry state. Add visual indicators for the currently selected entry using CSS classes. Ensure the first entry is automatically selected when the page loads.
+
+## 3. Develop Mock Data Service [pending]
+### Dependencies: None
+### Description: Create a mock data service that simulates API calls to fetch journal entries until CMS integration is complete.
+### Details:
+Create a mockData.js file with sample entries of different types (text, image, gallery). Implement a fetchEntries function that returns a Promise resolving to this mock data. Include various entry properties like id, title, date, type, content, and images with proper structure for testing all rendering scenarios.
+
+## 4. Implement Responsive Layout [pending]
+### Dependencies: 20.1, 20.2
+### Description: Create a responsive layout for the journal page that works well on different screen sizes.
+### Details:
+Design and implement CSS for the journal page layout. On larger screens, use a two-column layout with the entry list on the left and selected entry content on the right. On smaller screens, implement a collapsible entry list or a mobile-friendly navigation pattern. Add media queries to handle different viewport sizes.
+
+## 5. Add Entry Filtering and Sorting Options [pending]
+### Dependencies: 20.2, 20.3
+### Description: Implement functionality to filter and sort journal entries by type, date, or other criteria.
+### Details:
+Add UI controls for filtering entries by type (text, image, gallery) and sorting by date (newest/oldest first). Implement the filtering and sorting logic in the component state. Update the entry list to reflect the current filter and sort settings. Preserve the selected entry when possible after filtering/sorting.
+

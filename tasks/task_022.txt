@@ -1,0 +1,122 @@
+# Task ID: 22
+# Title: Create Info Page with Static Content
+# Status: pending
+# Dependencies: 16, 17
+# Priority: medium
+# Description: Build the Info page that displays the photographer's bio, contact information, and social media links.
+# Details:
+1. Create `src/pages/InfoPage.jsx` component
+2. Implement state for info content:
+```jsx
+const [info, setInfo] = useState(null);
+
+useEffect(() => {
+  // Fetch info content from CMS
+  const fetchInfo = async () => {
+    try {
+      // This will be replaced with actual CMS data fetching
+      const response = await fetch('/api/info');
+      const data = await response.json();
+      setInfo(data);
+    } catch (error) {
+      console.error('Error fetching info:', error);
+    }
+  };
+  
+  fetchInfo();
+}, []);
+```
+3. Create the info page layout:
+```jsx
+return (
+  <div className="info-page">
+    {info ? (
+      <>
+        <div className="bio-section">
+          <h1>About</h1>
+          <div 
+            className="bio-content"
+            dangerouslySetInnerHTML={{ __html: info.bio }}
+          />
+        </div>
+        
+        <div className="contact-section">
+          <h2>Contact</h2>
+          <p className="email">
+            <a href={`mailto:${info.email}`}>{info.email}</a>
+          </p>
+          
+          <div className="social-links">
+            {info.instagram && (
+              <a 
+                href={`https://instagram.com/${info.instagram}`} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="social-link instagram"
+              >
+                Instagram: @{info.instagram}
+              </a>
+            )}
+            
+            {info.twitter && (
+              <a 
+                href={`https://twitter.com/${info.twitter}`} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="social-link twitter"
+              >
+                Twitter: @{info.twitter}
+              </a>
+            )}
+          </div>
+        </div>
+      </>
+    ) : (
+      <div className="loading">Loading information...</div>
+    )}
+  </div>
+);
+```
+4. Add CSS for layout and styling
+5. For development, create a mock data file with sample info content until CMS integration is complete
+
+# Test Strategy:
+1. Verify that info content loads and displays correctly
+2. Test that the bio content renders properly from markdown
+3. Confirm that email link works correctly
+4. Test that social media links are correctly formatted and open in new tabs
+5. Verify loading state displays appropriately
+6. Check responsive behavior on different screen sizes
+7. Test that the page handles missing social media links gracefully
+
+# Subtasks:
+## 1. Create InfoPage Component File [pending]
+### Dependencies: None
+### Description: Set up the InfoPage component at src/pages/InfoPage.jsx as the main container for the info page.
+### Details:
+Create a new file named InfoPage.jsx in the src/pages directory and define a functional React component.
+
+## 2. Implement State and Data Fetching Logic [pending]
+### Dependencies: 22.1
+### Description: Add state management and useEffect logic to fetch info content from the CMS or mock API endpoint.
+### Details:
+Use useState to manage the info object and useEffect to fetch data asynchronously from '/api/info', handling loading and error states.
+
+## 3. Develop Info Page Layout and Content Rendering [pending]
+### Dependencies: 22.2
+### Description: Build the JSX structure to display the photographer's bio, contact information, and social media links using the fetched data.
+### Details:
+Render sections for bio, contact email, and social media links (Instagram, Twitter) using the info state. Use dangerouslySetInnerHTML for bio content.
+
+## 4. Apply CSS Styling for Layout and Design [pending]
+### Dependencies: 22.3
+### Description: Add and link CSS styles to ensure the info page is visually appealing and matches the site's design.
+### Details:
+Create or update CSS files to style the info page, including layout, typography, and responsive design for all sections.
+
+## 5. Create and Integrate Mock Data for Development [pending]
+### Dependencies: 22.2
+### Description: Develop a mock data file with sample info content to use until CMS integration is complete.
+### Details:
+Create a local mock data file or endpoint that returns sample bio, email, and social media handles. Update the fetch logic to use this mock data during development.
+

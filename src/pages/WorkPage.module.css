@@ -1,0 +1,35 @@
+/* WorkPage.module.css */
+
+.workPage {
+  /* Add padding or other container styles if needed */
+  height: calc(100vh - 4rem); /* Example: full viewport height minus padding */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden; /* Hide overflow if content is too big */
+}
+
+.clickableArea {
+  cursor: pointer; /* Default pointer cursor */
+  /* Example for custom cursor (ensure cursor file exists in public):
+  cursor: url('/cursors/next-cursor.png') 32 32, auto; 
+  */
+  width: 100%; /* Make clickable area fill container */
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.workImage {
+  display: block;
+  max-width: 90%; /* Limit image size within container */
+  max-height: 90%;
+  object-fit: contain;
+}
+
+.workDescription {
+  max-width: 80%;
+  text-align: center;
+  /* Add styling for title (h2) and description (p) */
+} 

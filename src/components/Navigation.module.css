@@ -1,0 +1,220 @@
+/* Navigation.module.css */
+
+.navContainer {
+  position: fixed; /* *** Fix position *** */
+  top: 0;
+  left: 0;
+  height: 100vh; /* Full height */
+  width: 200px; /* Fixed width */
+  background-color: #f2f2f2; /* Changed to match body */
+  padding: 2rem 1rem; /* Adjust padding */
+  overflow-y: auto; /* Add scroll if content overflows */
+  z-index: 1000; /* Ensure it's above main content */
+  /* border-right: 1px solid #ccc; Removed */
+  /* Removed display: flex and justify-content as list handles layout */
+  /* align-items: flex-start; */ 
+}
+
+.navList {
+  display: flex;
+  flex-direction: column; /* *** Stack items vertically *** */
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  gap: 0.5rem; /* Vertical gap */
+  align-items: flex-start; /* Align items to the start (left) */
+}
+
+.navItem a,
+.navItem button {
+  text-decoration: none;
+  color: #333; /* Adjust color as needed */
+  padding: 0.5rem;
+  font-size: 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.navItem a:hover,
+.navItem button:hover {
+  color: #007bff; /* Example hover color */
+}
+
+/* Specific styling for the work dropdown */
+.workNavItem {
+  /* position: relative; Removed */
+}
+
+.workSubnav {
+  /* position: absolute; Removed */
+  /* top: 0; Removed */
+  /* left: 100%; Removed */
+  /* margin-left: 0; Removed */
+  /* background-color: white; Removed - inherits container background */
+  /* border: 1px solid #ccc; Removed */
+  list-style: none;
+  padding: 0; /* Remove padding */
+  margin: 0.5rem 0 0 0; /* Add top margin, remove others */
+  /* min-width: 150px; Removed */
+  /* z-index: 10; Removed */
+  /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); Removed */
+}
+
+.workSubnav li {
+  /* No extra styles needed for li itself, just the link inside */
+}
+
+.workSubnav li a {
+  display: block;
+  padding: 0.3rem 0.5rem 0.3rem 1.5rem; /* Add left padding for indentation */
+  color: #333;
+  white-space: nowrap;
+  font-size: 0.9em; /* Slightly smaller font for sub-items */
+}
+
+.workSubnav li a:hover {
+  background-color: rgba(0, 0, 0, 0.05); /* Subtle hover for inline items */
+}
+
+.activeLink {
+  /* Define active styles */
+  font-weight: bold;
+  color: #0056b3; /* Darker blue example */
+  text-decoration: underline;
+}
+
+/* Hamburger Button */
+.hamburgerButton {
+  display: none; /* Hidden by default */
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  position: absolute; /* Position within the fixed nav */
+  top: 1rem;
+  right: 1rem; /* Position inside the container */
+  z-index: 1001; 
+}
+
+.hamburgerButton span {
+  display: block;
+  width: 25px;
+  height: 3px;
+  background-color: #333;
+  margin: 5px 0;
+  transition: transform 0.3s ease;
+}
+
+/* Basic animation for hamburger */
+.hamburgerButton[aria-expanded="true"] span:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
+.hamburgerButton[aria-expanded="true"] span:nth-child(2) {
+  opacity: 0;
+}
+.hamburgerButton[aria-expanded="true"] span:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
+}
+
+/* Mobile Menu Overlay */
+.mobileNavOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  z-index: 1000;
+  display: flex; 
+  justify-content: flex-end; /* Position menu on the right */
+}
+
+/* Mobile Menu List */
+.mobileNavList {
+  list-style: none;
+  padding: 2rem;
+  margin: 0;
+  background-color: #f2f2f2; /* Match body background */
+  width: 80%; /* Adjust width as needed */
+  max-width: 300px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  position: relative; /* For close button positioning */
+}
+
+.mobileNavList .navItem a,
+.mobileNavList .navItem button {
+  font-size: 1.2rem; /* Larger font for mobile */
+  display: block; /* Make links take full width */
+  padding: 0.8rem 0;
+}
+
+.mobileNavList .workSubnav {
+  position: static; /* Override absolute positioning */
+  border: none;
+  box-shadow: none;
+  padding-left: 1rem; /* Indent subnav */
+  margin-top: 0.5rem;
+  background-color: transparent;
+}
+
+.closeButton {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  color: #333;
+}
+
+/* Tablet Styles */
+@media (max-width: 1024px) {
+  /* Adjustments for vertical tablet nav if needed */
+  /* .navList { gap: 0.8rem; } */
+
+  /* Font size adjustment can stay */
+  .navItem a,
+  .navItem button {
+    font-size: 0.9rem; /* Slightly smaller font for tablets */
+  }
+
+  /* Padding adjustment can stay */
+  .navContainer {
+    padding: 1rem; 
+  }
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+  .navContainer {
+     width: 100%; /* Full width when mobile menu is toggled? Or hide? */
+     /* Option 1: Hide the fixed nav container itself on mobile */
+     /* display: none; */ 
+     /* Option 2: Keep container, but only show hamburger */
+     padding: 0; /* Remove padding if only showing hamburger */
+     background: none; /* Remove background if only showing hamburger */
+     border: none;
+     height: auto; /* Reset height */
+  }
+
+  .navList { 
+    display: none; /* Still hide desktop list */
+  }
+
+  .hamburgerButton {
+    display: block; 
+    /* Adjust positioning if navContainer is kept */
+    position: fixed; /* Keep hamburger fixed */
+    top: 1rem;
+    left: 1rem; /* Position top-left */
+  }
+
+  /* Mobile overlay is handled by JS state */
+  /* .mobileNavOverlay { ... } */
+} 

@@ -1,0 +1,111 @@
+# Task ID: 18
+# Title: Implement Home Page with Random Image Swap
+# Status: pending
+# Dependencies: 16, 17
+# Priority: medium
+# Description: Build the home page with image display functionality that randomly swaps images at intervals.
+# Details:
+1. Create `src/pages/HomePage.jsx` component
+2. Implement a state to store the current displayed image and available images:
+```jsx
+const [images, setImages] = useState([]);
+const [currentImage, setCurrentImage] = useState(null);
+
+useEffect(() => {
+  // Fetch images from content directory or CMS
+  const fetchImages = async () => {
+    try {
+      // This will be replaced with actual CMS data fetching
+      const response = await fetch('/api/home-images');
+      const data = await response.json();
+      setImages(data);
+      setCurrentImage(data[Math.floor(Math.random() * data.length)]);
+    } catch (error) {
+      console.error('Error fetching images:', error);
+    }
+  };
+  
+  fetchImages();
+}, []);
+```
+3. Implement random image swap functionality:
+```jsx
+useEffect(() => {
+  if (images.length === 0) return;
+  
+  const interval = setInterval(() => {
+    let newIndex;
+    do {
+      newIndex = Math.floor(Math.random() * images.length);
+    } while (images[newIndex] === currentImage && images.length > 1);
+    
+    setCurrentImage(images[newIndex]);
+  }, 5000); // Swap every 5 seconds
+  
+  return () => clearInterval(interval);
+}, [images, currentImage]);
+```
+4. Create the UI to display the current image with smooth transitions:
+```jsx
+return (
+  <div className="home-page">
+    {currentImage && (
+      <img 
+        src={currentImage.image} 
+        alt={currentImage.title || 'Portfolio image'} 
+        className="home-image"
+      />
+    )}
+  </div>
+);
+```
+5. Add CSS for smooth image transitions:
+```css
+.home-image {
+  width: 100%;
+  height: 100vh;
+  object-fit: cover;
+  transition: opacity 0.5s ease-in-out;
+}
+```
+6. For development, create a mock data file with sample images until CMS integration is complete
+
+# Test Strategy:
+1. Verify that images load correctly on the home page
+2. Confirm that images swap randomly at the specified interval
+3. Test that transitions between images are smooth
+4. Check that the component handles empty image arrays gracefully
+5. Verify responsive behavior on different screen sizes
+6. Test with various image sizes and aspect ratios
+
+# Subtasks:
+## 1. Set Up Home Page Component Structure [pending]
+### Dependencies: None
+### Description: Create the HomePage component file and establish the basic React structure for the home page.
+### Details:
+Generate src/pages/HomePage.jsx with a functional component scaffold, ensuring it is ready for further logic and UI additions.
+
+## 2. Implement Image State Management and Fetching [pending]
+### Dependencies: 18.1
+### Description: Add state variables for images and current image, and implement logic to fetch images from a mock API or local data source.
+### Details:
+Use React's useState and useEffect to fetch image data and initialize the current image randomly from the fetched list.
+
+## 3. Develop Random Image Swap Functionality [pending]
+### Dependencies: 18.2
+### Description: Implement logic to swap the displayed image at regular intervals, ensuring the new image is randomly selected and not the same as the previous one.
+### Details:
+Set up a setInterval in useEffect to update the current image every 5 seconds, using a random index that differs from the current image.
+
+## 4. Build Image Display UI with Smooth Transitions [pending]
+### Dependencies: 18.3
+### Description: Create the UI to display the current image and apply CSS transitions for smooth fading effects between image swaps.
+### Details:
+Render the current image in the component and apply CSS classes for opacity transitions to enhance visual smoothness.
+
+## 5. Create and Integrate Mock Image Data for Development [pending]
+### Dependencies: 18.2
+### Description: Develop a mock data file with sample images to use during development before CMS integration is available.
+### Details:
+Prepare a local JSON or JS file with sample image objects and update the fetch logic to use this data source in development mode.
+

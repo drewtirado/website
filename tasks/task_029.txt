@@ -1,0 +1,173 @@
+# Task ID: 29
+# Title: Set Up Continuous Deployment for CMS Updates
+# Status: pending
+# Dependencies: 28
+# Priority: medium
+# Description: Configure the system to automatically rebuild and deploy the site when content is updated through the CMS.
+# Details:
+1. Configure Netlify CMS to use the Git Gateway backend:
+```yaml
+# public/admin/config.yml
+backend:
+  name: git-gateway
+  branch: main # or your production branch
+```
+
+2. Set up a build hook in Netlify:
+   - Go to Site settings > Build & deploy > Continuous deployment > Build hooks
+   - Create a new build hook named "CMS Update"
+   - Copy the generated URL
+
+3. Configure the CMS to trigger the build hook when content changes:
+```yaml
+# public/admin/config.yml
+backend:
+  name: git-gateway
+  branch: main
+
+# Add this section to trigger builds
+publish_mode: editorial_workflow
+
+# Optional: Configure the CMS to call a webhook when content is published
+webhook: https://api.netlify.com/build_hooks/YOUR_BUILD_HOOK_ID
+```
+
+4. For more advanced control, create a serverless function to handle CMS updates:
+```javascript
+// netlify/functions/cms-trigger.js
+exports.handler = async (event, context) => {
+  // Only allow POST requests
+  if (event.httpMethod !== "POST") {
+    return { statusCode: 405, body: "Method Not Allowed" };
+  }
+  
+  // Verify the request is from Netlify CMS
+  // You might want to add authentication here
+  
+  try {
+    // Parse the incoming webhook payload
+    const payload = JSON.parse(event.body);
+    
+    // Trigger a build using the Netlify API
+    const response = await fetch(
+      `https://api.netlify.com/build_hooks/YOUR_BUILD_HOOK_ID`,
+      { method: "POST" }
+    );
+    
+    if (response.ok) {
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ message: "Build triggered successfully" })
+      };
+    } else {
+      throw new Error("Failed to trigger build");
+    }
+  } catch (error) {
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ message: "Error triggering build", error: error.message })
+    };
+  }
+};
+```
+
+5. Configure the CMS to use the serverless function:
+```yaml
+# public/admin/config.yml
+backend:
+  name: git-gateway
+  branch: main
+
+# Use the serverless function instead of direct webhook
+webhook: /.netlify/functions/cms-trigger
+```
+
+6. Set up branch preview deployments for editorial workflow:
+```toml
+# netlify.toml
+
+# Production context: all deploys from the main branch
+[context.production]
+  command = "npm run build"
+  publish = "dist"
+
+# Deploy Preview context: all deploys generated from pull/merge requests
+[context.deploy-preview]
+  command = "npm run build:preview"
+  publish = "dist"
+
+# Branch deploy context: all deploys that are not from pull/merge requests or from the main branch
+[context.branch-deploy]
+  command = "npm run build:branch"
+  publish = "dist"
+```
+
+7. Add build scripts for different environments:
+```json
+// package.json
+{
+  "scripts": {
+    "build": "vite build",
+    "build:preview": "vite build --mode preview",
+    "build:branch": "vite build --mode branch"
+  }
+}
+```
+
+8. Configure environment-specific settings:
+```javascript
+// .env.production
+VITE_API_URL=https://production-api.example.com
+
+// .env.preview
+VITE_API_URL=https://staging-api.example.com
+
+// .env.branch
+VITE_API_URL=https://dev-api.example.com
+```
+
+9. Test the continuous deployment setup by making a change through the CMS
+
+# Test Strategy:
+1. Make a test change through the CMS and verify that a build is triggered
+2. Check that the changes appear on the live site after deployment
+3. Test the editorial workflow if enabled (draft, review, publish)
+4. Verify that branch preview deployments work correctly
+5. Test that the build hook can only be triggered by authorized sources
+6. Monitor build logs to ensure the process completes successfully
+7. Check deployment notifications if configured
+8. Verify that environment-specific settings are applied correctly
+9. Test concurrent CMS updates to ensure they're handled properly
+10. Measure the time from content update to live site update
+
+# Subtasks:
+## 1. Configure Netlify CMS with Git Gateway [pending]
+### Dependencies: None
+### Description: Set up the Netlify CMS configuration file to use Git Gateway backend and configure the editorial workflow
+### Details:
+Update the public/admin/config.yml file to include the Git Gateway backend configuration pointing to the main branch. Enable the editorial workflow by adding 'publish_mode: editorial_workflow' to the configuration file.
+
+## 2. Create and configure Netlify build hook [pending]
+### Dependencies: None
+### Description: Set up a build hook in Netlify's dashboard that will trigger site rebuilds when content changes
+### Details:
+Navigate to Site settings > Build & deploy > Continuous deployment > Build hooks in the Netlify dashboard. Create a new build hook named 'CMS Update' and copy the generated URL for use in subsequent steps.
+
+## 3. Implement webhook integration in CMS configuration [pending]
+### Dependencies: 29.1, 29.2
+### Description: Configure the CMS to trigger the Netlify build hook when content is published
+### Details:
+Add the webhook configuration to public/admin/config.yml using the build hook URL generated in the previous step. Format: 'webhook: https://api.netlify.com/build_hooks/YOUR_BUILD_HOOK_ID'
+
+## 4. Create serverless function for advanced build control [pending]
+### Dependencies: 29.2
+### Description: Develop a serverless function that handles CMS update events with additional logic and security
+### Details:
+Create the file netlify/functions/cms-trigger.js with the provided code. Update the build hook ID in the function code with the one generated earlier. Add any necessary authentication or validation logic to ensure only legitimate CMS updates trigger builds.
+
+## 5. Configure branch preview deployments [pending]
+### Dependencies: 29.1, 29.3
+### Description: Set up environment-specific builds and preview deployments for the editorial workflow
+### Details:
+Create a netlify.toml file with context-specific build configurations for production, deploy-preview, and branch-deploy. Add corresponding build scripts to package.json and create environment-specific .env files for different deployment contexts. Update the CMS configuration to use the serverless function instead of the direct webhook if advanced control is needed.
+

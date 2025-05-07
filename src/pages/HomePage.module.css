@@ -1,0 +1,40 @@
+/* HomePage.module.css */
+
+.homePage {
+  /* Background is handled globally in index.css */
+  padding: 1rem; /* Add some padding */
+}
+
+.imageContainer {
+  display: flex;
+  flex-wrap: wrap; /* Allow wrapping if needed */
+  justify-content: center; /* Center items */
+  align-items: center;
+  gap: 2rem; /* Gap between images */
+  margin-top: 2rem;
+}
+
+.homeImage {
+  display: block;
+  max-width: 100%; /* Ensures image is responsive */
+  height: auto; /* Maintain aspect ratio */
+  flex-basis: 40%; /* Try to fit two images side-by-side */
+  max-height: 70vh; /* Limit height */
+  object-fit: contain; /* Contain within bounds, don't crop */
+  cursor: pointer;
+  border: 1px solid #ddd; /* Optional subtle border */
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.1); /* Optional subtle shadow */
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+  .imageContainer {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .homeImage {
+    flex-basis: 90%; /* Allow image to take more width on mobile */
+    max-height: 50vh; /* Adjust max height for mobile */
+  }
+} 

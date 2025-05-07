@@ -1,0 +1,132 @@
+# Task ID: 28
+# Title: Deploy to Netlify
+# Status: pending
+# Dependencies: 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27
+# Priority: high
+# Description: Set up and deploy the website to Netlify, configuring continuous deployment from the Git repository.
+# Details:
+1. Create a `netlify.toml` configuration file in the project root:
+```toml
+[build]
+  publish = "dist"
+  command = "npm run build"
+
+# Redirect all URLs to index.html for SPA routing
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Add security headers
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' https://identity.netlify.com https://unpkg.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://res.cloudinary.com; connect-src 'self' https://api.netlify.com;"
+
+# Environment variables
+[build.environment]
+  NODE_VERSION = "18"
+```
+
+2. Create a `.nvmrc` file to specify the Node.js version:
+```
+18
+```
+
+3. Update `package.json` with build scripts:
+```json
+{
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "netlify:dev": "netlify dev"
+  }
+}
+```
+
+4. Install the Netlify CLI for local testing:
+```bash
+npm install -g netlify-cli
+```
+
+5. Initialize Netlify in the project:
+```bash
+netlify init
+```
+Follow the prompts to:  
+- Create a new site or select an existing one
+- Set up continuous deployment from your Git repository
+- Configure build settings
+
+6. Set up environment variables in the Netlify dashboard:
+   - Go to Site settings > Build & deploy > Environment
+   - Add any required environment variables
+
+7. Configure build hooks for CMS updates:
+   - Go to Site settings > Build & deploy > Continuous deployment
+   - Create a build hook that can be triggered when CMS content changes
+
+8. Set up custom domain (if applicable):
+   - Go to Site settings > Domain management
+   - Add custom domain and configure DNS settings
+
+9. Enable HTTPS:
+   - Netlify provides automatic HTTPS with Let's Encrypt
+   - Ensure that "HTTPS only" is enabled in the domain settings
+
+10. Test the deployment locally before pushing:
+```bash
+netlify build
+netlify deploy --prod
+```
+
+11. Push changes to the connected Git repository to trigger automatic deployment
+
+# Test Strategy:
+1. Verify that the build process completes successfully on Netlify
+2. Test that all pages load correctly on the deployed site
+3. Confirm that routing works properly for all URLs
+4. Verify that the CMS is accessible and functional
+5. Test content updates through the CMS to ensure they appear on the live site
+6. Check that security headers are properly set
+7. Verify HTTPS is working correctly
+8. Test the site on various devices and browsers after deployment
+9. Check performance metrics using Lighthouse or similar tools
+10. Verify that environment variables are correctly applied
+
+# Subtasks:
+## 1. Prepare Project for Netlify Deployment [pending]
+### Dependencies: None
+### Description: Set up the project with necessary configuration files and scripts for Netlify deployment.
+### Details:
+Create a netlify.toml file with build settings, redirects, headers, and environment variables. Add a .nvmrc file for Node.js version specification. Update package.json with required build and development scripts.
+
+## 2. Install and Configure Netlify CLI [pending]
+### Dependencies: 28.1
+### Description: Install the Netlify CLI globally and initialize the project for Netlify deployment.
+### Details:
+Run 'npm install -g netlify-cli' to install the CLI. Use 'netlify init' to link the project to a Netlify site, following prompts to connect the Git repository and configure build settings.
+
+## 3. Set Up Environment Variables and Build Hooks [pending]
+### Dependencies: 28.2
+### Description: Configure environment variables and build hooks in the Netlify dashboard for deployment and CMS integration.
+### Details:
+In the Netlify dashboard, add required environment variables under Site settings > Build & deploy > Environment. Create build hooks for CMS-triggered deployments if needed.
+
+## 4. Configure Domain and HTTPS Settings [pending]
+### Dependencies: 28.3
+### Description: Set up a custom domain and enable HTTPS for the deployed site.
+### Details:
+Add a custom domain in Site settings > Domain management and configure DNS as needed. Ensure HTTPS is enabled and set to 'HTTPS only' in domain settings.
+
+## 5. Test and Trigger Continuous Deployment [pending]
+### Dependencies: 28.4
+### Description: Test the deployment locally, then push changes to the Git repository to trigger Netlify's continuous deployment pipeline.
+### Details:
+Use 'netlify build' and 'netlify deploy --prod' to test locally. Push to the connected Git repository and verify that Netlify builds and deploys the site automatically.
+

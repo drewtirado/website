@@ -1,0 +1,321 @@
+# Task ID: 23
+# Title: Implement Responsive Design
+# Status: pending
+# Dependencies: 18, 19, 20, 21, 22
+# Priority: high
+# Description: Ensure the website is fully responsive and provides optimal user experience across all device sizes.
+# Details:
+1. Create a responsive navigation component:
+```jsx
+// src/components/Navigation.jsx
+import { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+
+const Navigation = () => {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const location = useLocation();
+  
+  const toggleMenu = () => setMenuOpen(!menuOpen);
+  
+  const isActive = (path) => location.pathname === path;
+  
+  return (
+    <nav className="main-nav">
+      <div className="logo">
+        <Link to="/">Photographer Name</Link>
+      </div>
+      
+      <button className="menu-toggle" onClick={toggleMenu}>
+        {menuOpen ? 'Close' : 'Menu'}
+      </button>
+      
+      <ul className={`nav-links ${menuOpen ? 'open' : ''}`}>
+        <li>
+          <Link 
+            to="/" 
+            className={isActive('/') ? 'active' : ''}
+            onClick={() => setMenuOpen(false)}
+          >
+            Home
+          </Link>
+        </li>
+        <li>
+          <Link 
+            to="/work" 
+            className={isActive('/work') ? 'active' : ''}
+            onClick={() => setMenuOpen(false)}
+          >
+            Work
+          </Link>
+        </li>
+        <li>
+          <Link 
+            to="/journal" 
+            className={isActive('/journal') ? 'active' : ''}
+            onClick={() => setMenuOpen(false)}
+          >
+            Journal
+          </Link>
+        </li>
+        <li>
+          <Link 
+            to="/shop" 
+            className={isActive('/shop') ? 'active' : ''}
+            onClick={() => setMenuOpen(false)}
+          >
+            Shop
+          </Link>
+        </li>
+        <li>
+          <Link 
+            to="/info" 
+            className={isActive('/info') ? 'active' : ''}
+            onClick={() => setMenuOpen(false)}
+          >
+            Info
+          </Link>
+        </li>
+      </ul>
+    </nav>
+  );
+};
+
+export default Navigation;
+```
+
+2. Create responsive CSS using media queries:
+```css
+/* src/styles/responsive.css */
+
+/* Base styles for mobile first approach */
+body {
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.container {
+  width: 100%;
+  padding: 0 1rem;
+  margin: 0 auto;
+}
+
+/* Navigation styles */
+.main-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.9);
+  z-index: 1000;
+}
+
+.menu-toggle {
+  display: block;
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.nav-links {
+  display: none;
+  position: fixed;
+  top: 60px;
+  left: 0;
+  right: 0;
+  background: white;
+  flex-direction: column;
+  padding: 1rem;
+}
+
+.nav-links.open {
+  display: flex;
+}
+
+.nav-links li {
+  margin: 0.5rem 0;
+  list-style: none;
+}
+
+/* Home page */
+.home-image {
+  height: 100vh;
+  object-fit: cover;
+}
+
+/* Work page */
+.work-page {
+  display: flex;
+  flex-direction: column;
+  padding-top: 60px;
+}
+
+.work-navigation {
+  width: 100%;
+  padding: 1rem;
+}
+
+/* Journal page */
+.journal-page {
+  display: flex;
+  flex-direction: column;
+  padding-top: 60px;
+}
+
+.entry-list {
+  width: 100%;
+  padding: 1rem;
+}
+
+/* Shop page */
+.shop-container {
+  display: flex;
+  flex-direction: column;
+  padding-top: 60px;
+}
+
+.shop-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+/* Tablet styles */
+@media (min-width: 768px) {
+  .container {
+    max-width: 720px;
+  }
+  
+  .menu-toggle {
+    display: none;
+  }
+  
+  .nav-links {
+    display: flex;
+    position: static;
+    flex-direction: row;
+    padding: 0;
+    background: none;
+  }
+  
+  .nav-links li {
+    margin: 0 1rem;
+  }
+  
+  .work-page {
+    flex-direction: row;
+  }
+  
+  .work-navigation {
+    width: 250px;
+  }
+  
+  .journal-page {
+    flex-direction: row;
+  }
+  
+  .entry-list {
+    width: 250px;
+  }
+  
+  .shop-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Desktop styles */
+@media (min-width: 1024px) {
+  .container {
+    max-width: 960px;
+  }
+  
+  .work-navigation {
+    width: 300px;
+  }
+  
+  .entry-list {
+    width: 300px;
+  }
+  
+  .shop-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Large desktop styles */
+@media (min-width: 1200px) {
+  .container {
+    max-width: 1140px;
+  }
+}
+```
+
+3. Add viewport meta tag in index.html:
+```html
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+```
+
+4. Implement responsive image handling:
+```jsx
+// Example of responsive image component
+const ResponsiveImage = ({ src, alt, sizes }) => (
+  <img 
+    src={src} 
+    alt={alt} 
+    sizes={sizes || "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"}
+    loading="lazy"
+    className="responsive-image"
+  />
+);
+```
+
+5. Test and optimize for various breakpoints
+6. Ensure touch-friendly navigation for mobile devices
+
+# Test Strategy:
+1. Test the website on multiple devices (mobile phones, tablets, desktops)
+2. Verify that the navigation menu works correctly on all screen sizes
+3. Check that images scale appropriately and maintain aspect ratios
+4. Test touch interactions on mobile devices
+5. Verify that text remains readable on all screen sizes
+6. Use browser developer tools to test various viewport sizes
+7. Check loading performance on mobile networks
+8. Validate that interactive elements have appropriate touch targets
+9. Test orientation changes (portrait/landscape) on mobile devices
+
+# Subtasks:
+## 1. Enhance Responsive Navigation Component [pending]
+### Dependencies: None
+### Description: Improve the existing navigation component to ensure it works seamlessly across all device sizes with proper styling and transitions.
+### Details:
+Add hamburger icon for mobile menu toggle instead of text, implement smooth transitions for menu opening/closing, ensure proper spacing between nav items at different breakpoints, and fix the positioning of dropdown menu on mobile devices.
+
+## 2. Optimize Media Queries and CSS Structure [pending]
+### Dependencies: 23.1
+### Description: Refine the existing responsive CSS structure to improve maintainability and performance across breakpoints.
+### Details:
+Organize CSS using a mobile-first approach, consolidate redundant media queries, implement CSS variables for consistent theming, optimize specificity to reduce CSS conflicts, and ensure smooth transitions between breakpoints.
+
+## 3. Implement Advanced Responsive Image Handling [pending]
+### Dependencies: None
+### Description: Enhance the responsive image component to optimize loading times and visual quality across devices.
+### Details:
+Implement srcset and sizes attributes for optimal image resolution selection, create image loading placeholders, add progressive loading for large images, implement WebP format with fallbacks, and ensure proper aspect ratio maintenance across screen sizes.
+
+## 4. Create Touch-Friendly UI Elements [pending]
+### Dependencies: 23.1, 23.2
+### Description: Modify UI elements to ensure they are easily interactive on touch devices of various sizes.
+### Details:
+Increase touch target sizes for buttons and links (minimum 44x44px), implement touch-specific interactions like swipe gestures where appropriate, ensure proper spacing between interactive elements, add active states for touch feedback, and test with various input methods.
+
+## 5. Implement Cross-Browser Testing and Optimization [pending]
+### Dependencies: 23.1, 23.2, 23.3, 23.4
+### Description: Test the responsive implementation across multiple browsers and devices to ensure consistent experience.
+### Details:
+Set up automated testing with tools like BrowserStack or Cypress for multiple device/browser combinations, fix any browser-specific issues, optimize for performance on lower-end devices, ensure accessibility compliance across all breakpoints, and document any browser-specific workarounds.
+
