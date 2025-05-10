@@ -13,5 +13,12 @@ media_folder: "public/images/uploads"
 public_folder: "/images/uploads"
 
 collections:
-  # Your collections (Home, Work, Journal, Shop, Info) will go here.
-  # (This is from subtask 8.3)
+  - name: "Home"
+    label: "Home"
+    folder: "content/home"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - label: "Title"
+        name: "title"
+        type: "text"
