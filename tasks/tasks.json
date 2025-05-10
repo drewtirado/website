@@ -481,7 +481,7 @@
             1
           ],
           "details": "In the Netlify UI, go to Site configuration > Identity and enable Identity. Under Services, enable Git Gateway. Adjust registration settings and external providers as needed.[1][5]",
-          "status": "pending",
+          "status": "in-progress",
           "testStrategy": "Test user registration and login via the Netlify Identity widget on the CMS admin page."
         },
         {

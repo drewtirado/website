@@ -134,7 +134,7 @@ Created the required directory structure in `public/admin/` with two key files:
 The admin interface structure is now in place, ready for configuration in the next step. The use of the UMD bundle approach should help avoid further React version compatibility issues since it loads Decap CMS as a standalone script rather than as a React component.
 </info added on 2025-05-04T00:17:33.488Z>
 
-## 2. Configure Netlify Identity and Git Gateway [pending]
+## 2. Configure Netlify Identity and Git Gateway [in-progress]
 ### Dependencies: 8.1
 ### Description: Enable Netlify Identity and Git Gateway for authentication and Git-based content management.
 ### Details:
