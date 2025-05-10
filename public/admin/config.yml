@@ -2,10 +2,9 @@
 # Settings will be added in subsequent tasks.
 
 backend:
-  name:
-    git-gateway # Netlify's Git Gateway will be used.
-    # The Netlify Auth0 extension handles authenticating the user
-    # and should make that user available to Git Gateway.
+  name: git-gateway
+  # The Netlify Auth0 extension handles authenticating the user
+  # and should make that user available to Git Gateway.
   branch: main # Or your primary branch
 
 # Media and Collections will remain as previously planned
