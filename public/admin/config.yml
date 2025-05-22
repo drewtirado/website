@@ -12,12 +12,90 @@ media_folder: "public/images/uploads"
 public_folder: "/images/uploads"
 
 collections:
-  - name: "Home"
-    label: "Home"
-    folder: "content/home"
+  - name: "home"
+    label: "Home Page"
+    files:
+      - name: "homeImages"
+        label: "Home Images"
+        file: "src/data/homeImages.json"
+        fields:
+          - {
+              label: "Images",
+              name: "images",
+              widget: "list",
+              field: { label: "Image", name: "image", widget: "image" },
+            }
+
+  - name: "work"
+    label: "Work"
+    folder: "src/data/work"
     create: true
     slug: "{{slug}}"
     fields:
-      - label: "Title"
-        name: "title"
-        type: "text"
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Description", name: "description", widget: "text" }
+      - {
+          label: "Images",
+          name: "images",
+          widget: "list",
+          field: { label: "Image", name: "image", widget: "image" },
+        }
+
+  - name: "journal"
+    label: "Journal"
+    folder: "src/data/journal"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Publish Date", name: "date", widget: "datetime" }
+      - {
+          label: "Content Type",
+          name: "type",
+          widget: "select",
+          options: ["text", "image", "poem"],
+        }
+      - {
+          label: "Text Content",
+          name: "textContent",
+          widget: "markdown",
+          required: false,
+        }
+      - { label: "Image", name: "image", widget: "image", required: false }
+      - { label: "Caption", name: "caption", widget: "string", required: false }
+      - { label: "Tags", name: "tags", widget: "list", required: false }
+
+  - name: "shop"
+    label: "Shop"
+    folder: "src/data/shop"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Image", name: "image", widget: "image" }
+      - { label: "Description", name: "description", widget: "text" }
+      - {
+          label: "Edition Type",
+          name: "edition",
+          widget: "select",
+          options: ["open", "limited"],
+        }
+      - {
+          label: "Total Prints (Limited Edition)",
+          name: "total",
+          widget: "number",
+          required: false,
+        }
+      - { label: "Available Prints", name: "available", widget: "number" }
+      - { label: "Price", name: "price", widget: "number" }
+
+  - name: "info"
+    label: "Info Page"
+    files:
+      - name: "info"
+        label: "Info Content"
+        file: "src/data/info.json"
+        fields:
+          - { label: "Bio", name: "bio", widget: "markdown" }
+          - { label: "CV", name: "cv", widget: "markdown" }
+          - { label: "Email", name: "email", widget: "string" }
