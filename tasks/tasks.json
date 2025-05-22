@@ -1165,7 +1165,7 @@
       "dependencies": [
         16
       ],
-      "status": "pending",
+      "status": "done",
       "subtasks": [
         {
           "id": 1,
@@ -1173,7 +1173,7 @@
           "description": "Set up proper media folder configuration for each collection to ensure images are stored alongside content",
           "dependencies": [],
           "details": "Update the config.yml file to use collection-specific media folders instead of a global one. For each collection, add media_folder: '' and public_folder: '' to store images alongside content files. This improves compatibility with image processing libraries.",
-          "status": "pending",
+          "status": "done",
           "testStrategy": "Verify that uploaded images appear in the correct directories when adding content through the CMS"
         },
         {
@@ -1184,7 +1184,7 @@
             1
           ],
           "details": "Update the journal collection configuration to use path: '{{year}}/{{month}}/{{slug}}' and preview_path: 'journal/{{year}}/{{month}}/{{slug}}'. Create the necessary folder structure in content/journal/ to support this organization.",
-          "status": "pending",
+          "status": "done",
           "testStrategy": "Create a test journal entry and confirm it's saved in the correct year/month subfolder"
         },
         {
@@ -1193,7 +1193,7 @@
           "description": "Configure Netlify Identity for authentication and set up the editorial workflow",
           "dependencies": [],
           "details": "Add publish_mode: editorial_workflow to config.yml to enable draft/review/ready states. Include the Netlify Identity widget in the admin/index.html file. Configure user roles and permissions in the Netlify dashboard.",
-          "status": "pending",
+          "status": "done",
           "testStrategy": "Test the complete workflow from creating content as a draft to publishing it"
         },
         {
@@ -1205,7 +1205,7 @@
             2
           ],
           "details": "Create a new file at admin/preview-templates/index.js to register custom preview components for each collection. Develop individual preview components that match the site's styling and layout. Import these in the admin/index.js file.",
-          "status": "pending",
+          "status": "done",
           "testStrategy": "Compare the preview rendering with the actual site rendering to ensure consistency"
         },
         {
@@ -1217,7 +1217,7 @@
             3
           ],
           "details": "Modify the collections to support language variants by either using language-specific collections or by adding a language field to existing collections. Update the file naming pattern to include language codes (e.g., {{slug}}.{{language}}.md). Create language toggle in the admin UI.",
-          "status": "pending",
+          "status": "done",
           "testStrategy": "Create content in different languages and verify proper storage and display"
         }
       ]

@@ -1,6 +1,6 @@
 # Task ID: 17
 # Title: Configure Netlify CMS
-# Status: pending
+# Status: done
 # Dependencies: 16
 # Priority: high
 # Description: Set up Netlify CMS with the required collections for Home, Work, Journal, Shop, and Info sections.
@@ -98,31 +98,31 @@ collections:
 5. Test creating sample content for each collection
 
 # Subtasks:
-## 1. Configure media folder structure [pending]
+## 1. Configure media folder structure [done]
 ### Dependencies: None
 ### Description: Set up proper media folder configuration for each collection to ensure images are stored alongside content
 ### Details:
 Update the config.yml file to use collection-specific media folders instead of a global one. For each collection, add media_folder: '' and public_folder: '' to store images alongside content files. This improves compatibility with image processing libraries.
 
-## 2. Implement year/month folder structure for Journal entries [pending]
+## 2. Implement year/month folder structure for Journal entries [done]
 ### Dependencies: 17.1
 ### Description: Modify the Journal collection to organize entries by year and month folders
 ### Details:
 Update the journal collection configuration to use path: '{{year}}/{{month}}/{{slug}}' and preview_path: 'journal/{{year}}/{{month}}/{{slug}}'. Create the necessary folder structure in content/journal/ to support this organization.
 
-## 3. Add authentication and editorial workflow [pending]
+## 3. Add authentication and editorial workflow [done]
 ### Dependencies: None
 ### Description: Configure Netlify Identity for authentication and set up the editorial workflow
 ### Details:
 Add publish_mode: editorial_workflow to config.yml to enable draft/review/ready states. Include the Netlify Identity widget in the admin/index.html file. Configure user roles and permissions in the Netlify dashboard.
 
-## 4. Create custom preview templates [pending]
+## 4. Create custom preview templates [done]
 ### Dependencies: 17.1, 17.2
 ### Description: Develop custom preview templates for each content type to accurately represent how content will appear on the site
 ### Details:
 Create a new file at admin/preview-templates/index.js to register custom preview components for each collection. Develop individual preview components that match the site's styling and layout. Import these in the admin/index.js file.
 
-## 5. Set up multilingual content support [pending]
+## 5. Set up multilingual content support [done]
 ### Dependencies: 17.2, 17.3
 ### Description: Configure the CMS to handle content in multiple languages
 ### Details:
