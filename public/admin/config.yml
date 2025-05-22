@@ -7,6 +7,8 @@ backend:
   # and should make that user available to Git Gateway.
   branch: main # Or your primary branch
 
+publish_mode: editorial_workflow # Added editorial workflow
+
 # Media and Collections will remain as previously planned
 media_folder: "public/images/uploads"
 public_folder: "/images/uploads"
@@ -45,7 +47,7 @@ collections:
     label: "Journal"
     folder: "src/data/journal"
     create: true
-    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    path: "{{year}}/{{month}}/{{slug}}"
     fields:
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Publish Date", name: "date", widget: "datetime" }
